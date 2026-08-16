@@ -1,17 +1,3 @@
-
-Model 10:28 AM
-Here is the updated code. I have added validation against the exact list of 47 student codes provided in your image, plus added **22176** specifically designated as the educator code (which bypasses standard validation or can be used accordingly).
-
-### Changes Made:
-1. **Strict Code Whitelist:** Added an array `VALID_STUDENT_CODES` containing all 47 codes from your table.
-2. **Educator Code Integration:** Added **22176** as the designated educator code. If entered, it grants immediate access.
-3. **Validation Logic:** Updated the modal submission function to verify that typed 5-digit codes exist within the official whitelist.
-
----
-
-### Full Updated Code:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
