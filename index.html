@@ -309,6 +309,13 @@ a.link-continue:active { background: #152050; }
 }
 .warning-box strong { color: #241801; }
 
+.menu-exit-container {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #cbd2e1;
+    text-align: center;
+}
+
 /* ── Dark mode ──────────────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
     body         { background: #12131f; color: #d8daf0; }
@@ -323,6 +330,7 @@ a.link-continue:active { background: #152050; }
     .notice-box strong { color: #ffffff; }
     .warning-box { background: #332810; border-color: #705820; color: #fde8b8; }
     .warning-box strong { color: #fff; }
+    .menu-exit-container { border-top-color: #2e3060; }
 
     a.link-internal {
         background: #1e2045; border-color: #3a4580; color: #b0c0ff;
@@ -355,7 +363,6 @@ a.link-continue:active { background: #152050; }
 </style>
 </head>
 <body>
-
 <div id="student-modal">
   <div class="modal-card">
     <h2>Complement System Activity</h2>
@@ -365,429 +372,61 @@ a.link-continue:active { background: #152050; }
     <button id="sid-btn">Begin Activity →</button>
   </div>
 </div>
-
 <div id="story">
   <div id="passage-container"></div>
 </div>
-
 <script>
 const PASSAGES = {
-"Start-Complement": `<h1>The Complement System</h1>
-<p>The complement system is a crucial part of innate immunity. In this activity you will explore how each of the four pathways is activated, the steps that follow, and where the pathways converge.</p>
-
-<div class="key-box">
-<strong>Four pathways to explore:</strong><br>
-1. The Classical Pathway<br>
-2. The Alternative Pathway<br>
-3. The Lectin Pathway<br>
-4. Regulatory Control of Complement
-</div>
-
-<p>Each pathway contains questions — choose an answer to see immediate feedback and move forward. You can explore all four pathways in any order. Clinical case files are available at any time — use the link on the home page below.</p>
-
-<div class="warning-box">
-<strong>💡 How to get the most from this activity:</strong> When you see an answer you're unsure about, choose it deliberately — the feedback explains <em>why</em> it's wrong as well as what's correct. Exploring the wrong paths is part of the learning design.
-</div>
-
-<p><em>Where would you like to start?</em></p>
-
-[[Explore the Classical Pathway|Classical-Intro]]
-[[Explore the Alternative Pathway|Alternative-Intro]]
-[[Explore the Lectin Pathway|Lectin-Intro]]
-
-<hr style="border:none;margin:1rem 0;">
-
-[[Explore Regulatory Control of Complement|Regulation_Intro]]
-[[Review: Clinical Notes for CH50 Detectable Defects|Clinical-Notes-Menu]]`,
-
-"Classical-Intro": `<div class="section-label classical">Classical Pathway</div>
-<h1>1. The Classical Pathway</h1>
-<p>The Classical Pathway is typically initiated by antigen-antibody complexes (IgM or IgG binding to surface antigens).</p>
-
-<div class="key-box">
-<strong>Sequence of Activation:</strong><br>
-1. <strong>C1 Complex (C1q, C1r, C1s)</strong> binds to the Fc regions of bound antibodies.<br>
-2. Active C1s cleaves <strong>C4</strong> into C4a and C4b.<br>
-3. Active C1s also cleaves <strong>C2</strong> into C2a and C2b.<br>
-4. <strong>C4b2a</strong> forms the Classical C3 Convertase, which cleaves C3 into C3a and C3b.
-</div>
-
-<p>Which immunoglobulin class is the most efficient initiator of the Classical Pathway?</p>
-
-[[A) IgG4 (monomeric)|Classical-Q1-Incorrect]]
-[[B) Pentameric IgM|Classical-Q1-Correct]]
-[[C) IgE|Classical-Q1-Incorrect]]`,
-
-"Classical-Q1-Correct": `<div class="section-label classical">Classical Pathway</div>
-<h2>Correct!</h2>
-<div class="feedback-correct">
-<strong>Correct!</strong> Pentameric IgM has multiple binding sites in close proximity, allowing a single IgM molecule bound to an antigen surface to easily engage the C1 complex (specifically C1q).
-</div>
-<p>Monomeric IgG requires multiple IgG molecules closely spaced together to effectively dock C1q.</p>
-
-<br>
-[[Continue to C3 Convertase Question|Classical-Q2]]`,
-
-"Classical-Q1-Incorrect": `<div class="section-label classical">Classical Pathway</div>
-<h2>Incorrect</h2>
-<div class="feedback-incorrect">
-<strong>Incorrect.</strong> Monomeric immunoglobulins like IgG4 or IgE are inefficient at binding C1q compared to multimeric antibodies.
-</div>
-<p>Pentameric IgM is the most effective antibody isotype at initiating the classical cascade because its multiple Fc arms easily cross-link C1q.</p>
-
-<br>
-[[Try Question 1 Again|Classical-Intro]]`,
-
-"Classical-Q2": `<div class="section-label classical">Classical Pathway</div>
-<h2>Question 2: C3 Convertase</h2>
-<p>What is the enzymatic complex responsible for cleaving C3 in the Classical Pathway?</p>
-
-[[A) C3bBb|Classical-Q2-Incorrect]]
-[[B) C4b2a|Classical-Q2-Correct]]
-[[C) C5b67|Classical-Q2-Incorrect]]`,
-
-"Classical-Q2-Correct": `<div class="section-label classical">Classical Pathway</div>
-<h2>Correct!</h2>
-<div class="feedback-correct">
-<strong>Correct!</strong> <strong>C4b2a</strong> is the Classical (and Lectin) pathway C3 convertase.
-</div>
-<p>It cleaves fluid-phase C3 into the potent anaphylatoxin C3a and the opsonin C3b.</p>
-
-<br>
-[[← Return to Main Menu|Start-Complement]]`,
-
-"Classical-Q2-Incorrect": `<div class="section-label classical">Classical Pathway</div>
-<h2>Incorrect</h2>
-<div class="feedback-incorrect">
-<strong>Incorrect.</strong> C3bBb is the C3 convertase of the <em>Alternative</em> pathway.
-</div>
-<p>In the Classical pathway, C1s cleaves C4 and C2 to form <strong>C4b2a</strong>.</p>
-
-<br>
-[[Try Question 2 Again|Classical-Q2]]`,
-
-"Alternative-Intro": `<div class="section-label alternative">Alternative Pathway</div>
-<h1>2. The Alternative Pathway</h1>
-<p>The Alternative Pathway provides continuous, low-level surveillance through spontaneous hydrolysis of C3 ("tickover"). It does not require antibodies for activation.</p>
-
-<div class="key-box">
-<strong>Key Components:</strong> C3(H2O), Factor B, Factor D, Properdin (Stabiliser).<br>
-<strong>C3 Convertase:</strong> C3bBb
-</div>
-
-<p>Which factor stabilizes the short-lived Alternative C3 Convertase (C3bBb) on target cell surfaces?</p>
-
-[[A) Factor H|Alternative-Q1-Incorrect]]
-[[B) Factor D|Alternative-Q1-Incorrect]]
-[[C) Properdin (Factor P)|Alternative-Q1-Correct]]`,
-
-"Alternative-Q1-Correct": `<div class="section-label alternative">Alternative Pathway</div>
-<h2>Correct!</h2>
-<div class="feedback-correct">
-<strong>Correct!</strong> <strong>Properdin (Factor P)</strong> binds to and stabilizes C3bBb, extending its half-life by up to 10-fold on pathogen surfaces.
-</div>
-
-<br>
-[[← Return to Main Menu|Start-Complement]]`,
-
-"Alternative-Q1-Incorrect": `<div class="section-label alternative">Alternative Pathway</div>
-<h2>Incorrect</h2>
-<div class="feedback-incorrect">
-<strong>Incorrect.</strong> Factor H is a regulatory protein that <em>promotes decay</em> of C3bBb on host cells. Factor D cleaves Factor B.
-</div>
-<p><strong>Properdin</strong> is the positive regulator that stabilizes the convertase.</p>
-
-<br>
-[[Try Again|Alternative-Intro]]`,
-
-"Lectin-Intro": `<div class="section-label lectin">Lectin Pathway</div>
-<h1>3. The Lectin Pathway</h1>
-<p>The Lectin Pathway is triggered when pattern recognition molecules like <strong>Mannose-Binding Lectin (MBL)</strong> or <strong>Ficolins</strong> recognize carbohydrate patterns on microbial surfaces.</p>
-
-<div class="key-box">
-<strong>Key Proteases:</strong> MASP-1 and MASP-2 (MBL-Associated Serine Proteases).<br>
-<strong>C3 Convertase:</strong> C4b2a (identical to the Classical pathway).
-</div>
-
-<p>Which serine protease in the Lectin pathway is primarily responsible for cleaving C4 and C2 to generate the C3 convertase?</p>
-
-[[A) MASP-2|Lectin-Q1-Correct]]
-[[B) Factor D|Lectin-Q1-Incorrect]]
-[[C) C1s|Lectin-Q1-Incorrect]]`,
-
-"Lectin-Q1-Correct": `<div class="section-label lectin">Lectin Pathway</div>
-<h2>Correct!</h2>
-<div class="feedback-correct">
-<strong>Correct!</strong> <strong>MASP-2</strong> is the functional analogue of C1s and is responsible for cleaving both C4 and C2 to form C4b2a.
-</div>
-
-<br>
-[[← Return to Main Menu|Start-Complement]]`,
-
-"Lectin-Q1-Incorrect": `<div class="section-label lectin">Lectin Pathway</div>
-<h2>Incorrect</h2>
-<div class="feedback-incorrect">
-<strong>Incorrect.</strong> C1s belongs to the Classical pathway, and Factor D belongs to the Alternative pathway.
-</div>
-<p>In the Lectin pathway, <strong>MASP-2</strong> executes C4 and C2 cleavage.</p>
-
-<br>
-[[Try Again|Lectin-Intro]]`,
-
-"Regulation_Intro": `<div class="section-label regulation">Regulatory Control</div>
-<h1>4. Regulatory Control of Complement</h1>
-<p>Because complement activation generates powerful inflammatory mediators and membrane attack complexes, host cells require multiple fluid-phase and membrane-bound regulators to prevent self-tissue destruction.</p>
-
-<div class="key-box">
-<strong>Key Regulators:</strong><br>
-• <strong>C1 Inhibitor (C1-INH):</strong> Inactivates C1r, C1s, MASP-1, and MASP-2.<br>
-• <strong>Factor H & Factor I:</strong> Inactivate C3b to iC3b.<br>
-• <strong>DAF (CD55):</strong> Accelerates decay of C3 convertases.<br>
-• <strong>CD59 (Protectin):</strong> Blocks MAC assembly by binding C8/C9.
-</div>
-
-<p><em>Select a question to test your knowledge:</em></p>
-
-[[Question 1: C1-INH Targets|Regulation_Q2]]
-[[Question 2: Terminal MAC Regulation|Regulation_Q3]]
-
-<br>
-[[← Return to Main Menu|Start-Complement]]`,
-
-"Regulation_Q2": `<div class="section-label regulation">Regulatory Control</div>
-<h2>Question 1: C1 Inhibitor Targets</h2>
-<p>Which complement initiation pathway(s) are regulated by C1 inhibitor (C1-INH)?</p>
-
-[[A) Alternative pathway initiation only|Regulation_Q2_Incorrect_Alt]]
-[[B) Terminal Membrane Attack Complex (MAC) assembly|Regulation_Q2_Incorrect_MAC]]
-[[C) Initial activation steps of the Classical and Lectin pathways|Regulation_Q2_Correct_ClassicalLectinInit]]`,
-
-"Regulation_Q2_Correct_ClassicalLectinInit": `<div class="section-label regulation">Regulatory Control</div>
-<h2>Correct!</h2>
-<div class="feedback-correct">
-<strong>Correct!</strong> C1 inhibitor (C1-INH) regulates the initial activation steps of both the <strong>Classical pathway</strong> (by inactivating C1r and C1s) and the <strong>Lectin pathway</strong> (by inactivating MASP-1 and MASP-2).
-</div>
-<p>By irreversibly binding to and inhibiting these active serine proteases, C1-INH halts the cascade before C4 and C2 cleavage can occur, preventing uncontrolled activation.</p>
-
-<div class="key-box">
-<strong>Clinical Relevance:</strong> Deficiency of functional C1-INH leads to <strong>Hereditary Angioedema (HAE)</strong> due to unchecked activation of C1 and the kallikrein-kinin system, producing elevated bradykinin levels.
-</div>
-
-<br>
-[[Continue to Question 2: MAC Regulation|Regulation_Q3]]
-<br>
-[[← Return to Regulatory Control Menu|Regulation_Intro]]`,
-
-"Regulation_Q2_Incorrect_Alt": `<div class="section-label regulation">Regulatory Control</div>
-<h2>Incorrect</h2>
-<div class="feedback-incorrect">
-<strong>Incorrect.</strong> The alternative pathway initiation relies on Factor H and Factor I for regulatory control, not C1-INH.
-</div>
-<p>C1-INH acts on specific target proteases in the Classical (C1r/C1s) and Lectin (MASP-1/MASP-2) pathways.</p>
-
-<br>
-[[Try Question 1 Again|Regulation_Q2]]`,
-
-"Regulation_Q2_Incorrect_MAC": `<div class="section-label regulation">Regulatory Control</div>
-<h2>Incorrect</h2>
-<div class="feedback-incorrect">
-<strong>Incorrect.</strong> Terminal MAC assembly on host membrane cells is regulated by membrane-bound proteins like <strong>CD59 (Protectin)</strong>, not C1-INH.
-</div>
-<p>C1-INH acts early in the cascade on initial serine proteases.</p>
-
-<br>
-[[Try Question 1 Again|Regulation_Q2]]`,
-
-"Regulation_Q3": `<div class="section-label regulation">Regulatory Control</div>
-<h2>Question 2: Terminal MAC Regulation</h2>
-<p>Which membrane protein prevents host cell lysis by binding to C8 and C9, blocking Membrane Attack Complex (MAC) polymerization?</p>
-
-[[A) CD59 (Protectin)|Regulation_Q3_Correct]]
-[[B) DAF (CD55)|Regulation_Q3_Incorrect]]
-[[C) Factor H|Regulation_Q3_Incorrect]]`,
-
-"Regulation_Q3_Correct": `<div class="section-label regulation">Regulatory Control</div>
-<h2>Correct!</h2>
-<div class="feedback-correct">
-<strong>Correct!</strong> <strong>CD59 (Protectin)</strong> prevents MAC assembly on host cell membranes by blocking C9 insertion into the lipid bilayer.
-</div>
-
-<br>
-[[← Return to Regulatory Control Menu|Regulation_Intro]]`,
-
-"Regulation_Q3_Incorrect": `<div class="section-label regulation">Regulatory Control</div>
-<h2>Incorrect</h2>
-<div class="feedback-incorrect">
-<strong>Incorrect.</strong> DAF (CD55) dissociates C3 convertases, while Factor H acts as a cofactor for Factor I.
-</div>
-<p><strong>CD59 (Protectin)</strong> specifically prevents final MAC pore formation.</p>
-
-<br>
-[[Try Question 2 Again|Regulation_Q3]]`,
-
-"Clinical-Notes-Menu": `<div class="section-label clinical">Clinical Medicine</div>
-<h1>Classical Complement Pathway Deficiencies</h1>
-<p>The <strong>CH50 (total haemolytic complement) assay</strong> tests the ability of serum to lyse 50% of antibody-sensitised sheep erythrocytes via the classical pathway (C1-C9). A deficiency in any single component renders the assay severely reduced or absent.</p>
-
-<p><em>Select a clinical case file to review:</em></p>
-
-[[Case 1: C1q Deficiency (9yo F — Recurrent Infections & Lupus-like Rash)|Clinical-Case-1]]
-[[Case 2: C2 Deficiency (34yo M — Recurrent Sinopulmonary Infections & SLE)|Clinical-Case-2]]
-[[Case 3: C3 Deficiency (3yo M — Severe Phenotype / Multi-Pathway Failure)|Clinical-Case-3]]
-[[Case 4: C4A/C4B Null Allele Deficiency (22yo F — Treatment-Refractory SLE)|Clinical-Case-4]]
-[[Case 5: C5 Deficiency (19yo M — Recurrent Neisseria Meningitidis)|Clinical-Case-5]]
-[[📊 Review CH50 vs AP50 Diagnostic Summary Table|Clinical-Diagnostic-Summary]]
-
-<br>
-[[← Return to Main Pathway Selection|Start-Complement]]`,
-
-"Clinical-Case-1": `<div class="section-label clinical">Clinical Case Study</div>
-<h2>Case 1: C1q Deficiency [Rare autosomal recessive]</h2>
-<p><strong>Patient Profile:</strong> Female, 9 years old — recurrent infections & lupus-like rash.</p>
-
-<h3>Pathway Blockade Site</h3>
-<p><strong>C1q [BLOCKED]</strong> → C1r/C1s → C4 → C2 → C3 → MAC (C5–C9)</p>
-
-<h3>Laboratory Findings</h3>
-<div class="table-scroll">
-<table class="clinical-table">
-  <tr><th>Test</th><th>Result</th><th>Reference / Note</th></tr>
-  <tr><td>CH50</td><td><strong>0 U/mL</strong></td><td>Ref: 41–90 U/mL — absent activity</td></tr>
-  <tr><td>C1q antigen level</td><td><strong>&lt;1 mg/dL</strong></td><td>Ref: 14–22 mg/dL — undetectable</td></tr>
-  <tr><td>AP50 (alternative)</td><td><strong>Normal</strong></td><td>Alternative pathway intact</td></tr>
-</table>
-</div>
-
-<p>C1q is the pattern-recognition subunit of the C1 complex. Its absence abolishes classical pathway activation from the very first step, explaining the zero CH50. C1q also clears apoptotic cell debris; failure to clear apoptotic material releases self-antigens, driving SLE-like disease.</p>
-
-<br>
-[[← Return to Clinical Notes Menu|Clinical-Notes-Menu]]`,
-
-"Clinical-Case-2": `<div class="section-label clinical">Clinical Case Study</div>
-<h2>Case 2: C2 Deficiency</h2>
-<p><strong>Patient Profile:</strong> Male, 34 years old — recurrent sinopulmonary infections & SLE diagnosis.</p>
-
-<div class="table-scroll">
-<table class="clinical-table">
-  <tr><th>Test</th><th>Result</th><th>Reference / Note</th></tr>
-  <tr><td>CH50</td><td><strong>&lt;10 U/mL</strong></td><td>Severely reduced</td></tr>
-  <tr><td>C2 antigen</td><td><strong>Undetectable</strong></td><td>Ref: 22–34 mg/dL</td></tr>
-  <tr><td>AP50</td><td><strong>Normal</strong></td><td>Alternative pathway intact</td></tr>
-</table>
-</div>
-
-<p>C2 deficiency is the most common inherited complement deficiency. Since C2 is part of C4b2a, both Classical and Lectin pathways are impaired, but the Alternative pathway (AP50) remains fully functional.</p>
-
-<br>
-[[← Return to Clinical Notes Menu|Clinical-Notes-Menu]]`,
-
-"Clinical-Case-3": `<div class="section-label clinical">Clinical Case Study</div>
-<h2>Case 3: C3 Deficiency</h2>
-<p><strong>Patient Profile:</strong> Male, 3 years old — severe recurrent encapsulated bacterial infections.</p>
-
-<div class="table-scroll">
-<table class="clinical-table">
-  <tr><th>Test</th><th>Result</th><th>Reference / Note</th></tr>
-  <tr><td>CH50</td><td><strong>0 U/mL</strong></td><td>Completely absent</td></tr>
-  <tr><td>AP50</td><td><strong>0 U/mL</strong></td><td>Completely absent</td></tr>
-  <tr><td>C3 antigen</td><td><strong>&lt;1 mg/dL</strong></td><td>Undetectable</td></tr>
-</table>
-</div>
-
-<p>C3 is the central convergence point of all pathways. Absence of C3 abolishes opsonization, leukocyte recruitment, and MAC formation across all pathways, resulting in both zero CH50 and zero AP50.</p>
-
-<br>
-[[← Return to Clinical Notes Menu|Clinical-Notes-Menu]]`,
-
-"Clinical-Case-4": `<div class="section-label clinical">Clinical Case Study</div>
-<h2>Case 4: C4A/C4B Null Allele Deficiency</h2>
-<p><strong>Patient Profile:</strong> Female, 22 years old — early-onset SLE refractory to treatment.</p>
-
-<div class="table-scroll">
-<table class="clinical-table">
-  <tr><th>Test</th><th>Result</th><th>Reference</th></tr>
-  <tr><td>CH50</td><td><strong>18 U/mL</strong></td><td>Substantially reduced</td></tr>
-  <tr><td>C4 total antigen</td><td><strong>4 mg/dL</strong></td><td>Ref: 16–38 mg/dL</td></tr>
-  <tr><td>AP50</td><td><strong>Normal</strong></td><td>Alternative pathway intact</td></tr>
-</table>
-</div>
-
-<p>Reduced C4 impairs C3 convertase formation and immune complex clearance, depositing complexes in host tissue and triggering tissue inflammation/SLE.</p>
-
-<br>
-[[← Return to Clinical Notes Menu|Clinical-Notes-Menu]]`,
-
-"Clinical-Case-5": `<div class="section-label clinical">Clinical Case Study</div>
-<h2>Case 5: C5 Deficiency [Terminal MAC Defect]</h2>
-<p><strong>Patient Profile:</strong> Male, 19 years old — recurrent <em>Neisseria meningitidis</em> infections.</p>
-
-<div class="table-scroll">
-<table class="clinical-table">
-  <tr><th>Test</th><th>Result</th><th>Reference</th></tr>
-  <tr><td>CH50</td><td><strong>0%</strong></td><td>70–130%</td></tr>
-  <tr><td>AP50</td><td><strong>0%</strong></td><td>75–135%</td></tr>
-  <tr><td>C3</td><td><strong>Normal</strong></td><td>0.9–1.8 g/L</td></tr>
-</table>
-</div>
-
-<p>Terminal components (C5–C9) are shared by all pathways, so CH50 and AP50 are both 0. Because C3 is normal, opsonophagocytosis of Gram-positive bacteria remains intact, but serum bactericidal killing of thin-walled Gram-negative diplococci (<em>Neisseria</em>) is completely lost.</p>
-
-<br>
-[[← Return to Clinical Notes Menu|Clinical-Notes-Menu]]`,
-
-"Clinical-Diagnostic-Summary": `<div class="section-label clinical">Diagnostic Summary</div>
-<h2>CH50 vs AP50 Dissociation Analysis</h2>
-
-<div class="table-scroll">
-<table class="clinical-table">
-  <thead>
-    <tr>
-      <th>Deficiency</th>
-      <th>CH50 (Classical)</th>
-      <th>AP50 (Alternative)</th>
-      <th>Key Clinical Manifestation</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>C1q, C1r, C1s, C2, C4</strong></td>
-      <td>0% / Absent</td>
-      <td>Normal</td>
-      <td>Autoimmune disease (SLE-like); pyogenic infections</td>
-    </tr>
-    <tr>
-      <td><strong>Factor B, Factor D, Properdin</strong></td>
-      <td>Normal</td>
-      <td>0% / Absent</td>
-      <td>Neisserial and severe pyogenic infections</td>
-    </tr>
-    <tr>
-      <td><strong>C3</strong></td>
-      <td>0% / Absent</td>
-      <td>0% / Absent</td>
-      <td>Severe recurrent encapsulated bacterial infections</td>
-    </tr>
-    <tr>
-      <td><strong>C5, C6, C7, C8, C9</strong></td>
-      <td>0% / Absent</td>
-      <td>0% / Absent</td>
-      <td>Recurrent <em>Neisseria</em> infections (normal C3)</td>
-    </tr>
-    <tr>
-      <td><strong>C1-INH</strong></td>
-      <td>Reduced</td>
-      <td>Normal</td>
-      <td>Hereditary Angioedema (HAE)</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<br>
-[[← Return to Clinical Notes Menu|Clinical-Notes-Menu]]`
+"Start-Complement": "<h1>The Complement System</h1>\n<p>The complement system is a crucial part of innate immunity. In this activity you will explore how each of the four pathways is activated, the steps that follow, and where the pathways converge.</p>\n\n<div class=\"key-box\">\n<strong>Four pathways to explore:</strong><br>\n1. The Classical Pathway<br>\n2. The Alternative Pathway<br>\n3. The Lectin Pathway<br>\n4. Regulatory Control of Complement\n</div>\n\n<p>Each pathway contains questions — choose an answer to see immediate feedback and move forward. You can explore all four pathways in any order. Clinical case files are available at any time — use the link on the home page below. You can explore the pathways and clinical cases in any order.</p>\n\n<div class=\"warning-box\">\n<strong>💡 How to get the most from this activity:</strong> When you see an answer you're unsure about, choose it deliberately — the feedback explains <em>why</em> it's wrong as well as what's correct. Exploring the wrong paths is part of the learning design, not a mistake.\n</div>\n\n<p>''Where would you like to start?''</p>\n\n[[Explore the Classical Pathway|Classical-Intro]]\n[[Explore the Alternative Pathway|Alternative-Intro]]\n[[Explore the Lectin Pathway|Lectin-Intro]]\n\n<hr style=\"border:none;margin:1rem 0;\">\n\n[[Explore Regulatory Control of Complement|Regulation_Intro]]\n[[Review: Clinical Notes for CH50 Detectable Defects|Clinical-Notes-Menu]]\n\n<hr style=\"border:none;margin:1rem 0;\">\n<a class=\"link-internal mcq-link\" href=\"#\" data-target=\"Retrieval-Intro\">📝  MCQ Self-Test — Score Your Knowledge (10 questions)</a>", 
+
+"Classical-Intro": "<div class=\"section-label classical\">Classical Pathway</div>\n<h1>1. The Classical Pathway</h1>\n<p>The Classical Pathway is typically initiated by antigen-antibody complexes (IgM or IgG binding to surface antigens).</p>\n\n<div class=\"key-box\">\n<strong>Sequence of Activation:</strong><br>\n1. <strong>C1 Complex (C1q, C1r, C1s)</strong> binds to Fc regions of bound antibodies.<br>\n2. Active C1s cleaves <strong>C4</strong> into C4a and C4b.<br>\n3. Active C1s cleaves <strong>C2</strong> into C2a and C2b.<br>\n4. <strong>C4b2a</strong> forms the Classical C3 Convertase.\n</div>\n\n<p>Which immunoglobulin class is the most efficient initiator of the Classical Pathway?</p>\n\n[[A) Monomeric IgG1|Classical-Q1-Incorrect]]\n[[B) Pentameric IgM|Classical-Q1-Correct]]\n[[C) IgE|Classical-Q1-Incorrect]]",
+
+"Classical-Q1-Correct": "<div class=\"section-label classical\">Classical Pathway</div>\n<h2>Correct!</h2>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> Pentameric IgM has multiple Fc regions in close proximity, allowing a single IgM bound to an antigen to bind C1q efficiently.\n</div>\n<br>\n[[← Return to Main Menu|Start-Complement]]",
+
+"Classical-Q1-Incorrect": "<div class=\"section-label classical\">Classical Pathway</div>\n<h2>Incorrect</h2>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Monomeric antibodies require multiple molecules clustered together to engage C1q effectively.\n</div>\n<br>\n[[Try Question Again|Classical-Intro]]",
+
+"Alternative-Intro": "<div class=\"section-label alternative\">Alternative Pathway</div>\n<h1>2. The Alternative Pathway</h1>\n<p>The Alternative Pathway provides continuous surveillance through spontaneous C3 hydrolysis ('tickover').</p>\n\n<div class=\"key-box\">\n<strong>C3 Convertase:</strong> C3bBb (stabilized by Properdin)\n</div>\n<p>Which factor stabilizes C3bBb on microbial surfaces?</p>\n\n[[A) Properdin (Factor P)|Alternative-Q1-Correct]]\n[[B) Factor H|Alternative-Q1-Incorrect]]\n[[C) Factor I|Alternative-Q1-Incorrect]]",
+
+"Alternative-Q1-Correct": "<div class=\"section-label alternative\">Alternative Pathway</div>\n<h2>Correct!</h2>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> Properdin (Factor P) stabilizes the C3bBb convertase complex, extending its half-life.\n</div>\n<br>\n[[← Return to Main Menu|Start-Complement]]",
+
+"Alternative-Q1-Incorrect": "<div class=\"section-label alternative\">Alternative Pathway</div>\n<h2>Incorrect</h2>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Factors H and I are negative regulators that promote decay and cleavage of C3b.\n</div>\n<br>\n[[Try Question Again|Alternative-Intro]]",
+
+"Lectin-Intro": "<div class=\"section-label lectin\">Lectin Pathway</div>\n<h1>3. The Lectin Pathway</h1>\n<p>The Lectin Pathway is activated when pattern recognition receptors (e.g., MBL or Ficolins) bind terminal sugars on microbial surfaces.</p>\n\n<div class=\"key-box\">\n<strong>Key Protease:</strong> MASP-2 cleaves C4 and C2 to form C4b2a.\n</div>\n<p>Which protease executes C4 and C2 cleavage in the Lectin pathway?</p>\n\n[[A) MASP-2|Lectin-Q1-Correct]]\n[[B) Factor D|Lectin-Q1-Incorrect]]\n[[C) C1s|Lectin-Q1-Incorrect]]",
+
+"Lectin-Q1-Correct": "<div class=\"section-label lectin\">Lectin Pathway</div>\n<h2>Correct!</h2>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> MASP-2 is the functional analogue of C1s in the Lectin pathway.\n</div>\n<br>\n[[← Return to Main Menu|Start-Complement]]",
+
+"Lectin-Q1-Incorrect": "<div class=\"section-label lectin\">Lectin Pathway</div>\n<h2>Incorrect</h2>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> C1s functions in the Classical pathway, and Factor D functions in the Alternative pathway.\n</div>\n<br>\n[[Try Question Again|Lectin-Intro]]",
+
+"Regulation_Intro": "<div class=\"section-label regulation\">Regulatory Control</div>\n<h1>4. Regulatory Control of Complement</h1>\n<p>To prevent self-tissue destruction, human cells deploy fluid-phase and membrane-bound regulators to control complement activation.</p>\n\n<div class=\"key-box\">\n<strong>Key Regulators:</strong><br>\n• <strong>C1 Inhibitor (C1-INH):</strong> Inhibits C1r, C1s, MASP-1, MASP-2.<br>\n• <strong>Factor H & Factor I:</strong> Downregulate Alternative pathway convertases.<br>\n• <strong>CD59 (Protectin):</strong> Blocks MAC assembly.\n</div>\n\n<p>Which complement pathway step is inhibited by C1 Inhibitor (C1-INH)?</p>\n\n[[A) Formation of the Alternative C3 convertase|Regulation_Q2_Incorrect_Alt]]\n[[B) Polymerization of C9 in the Membrane Attack Complex|Regulation_Q2_Incorrect_MAC]]\n[[C) Initial activation steps of the Classical and Lectin pathways|Regulation_Q2_Correct_ClassicalLectinInit]]",
+
+"Regulation_Q2_Correct_ClassicalLectinInit": "<div class=\"section-label regulation\">Regulatory Control</div>\n<h2>Correct!</h2>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> C1 inhibitor (C1-INH) regulates the initial activation steps of both the <strong>Classical pathway</strong> (by inactivating C1r and C1s) and the <strong>Lectin pathway</strong> (by inactivating MASP-1 and MASP-2).\n</div>\n<p>By irreversibly binding to and inactivating these active serine proteases, C1-INH halts the cascade before C4 and C2 cleavage can occur, preventing uncontrolled downstream activation.</p>\n\n<div class=\"key-box\">\n<strong>Clinical Note:</strong> Deficiency of C1-INH causes <strong>Hereditary Angioedema (HAE)</strong> due to excessive bradykinin generation and uninhibited complement activation.\n</div>\n\n<br>\n[[← Return to Regulatory Control Menu|Regulation_Intro]]\n<br>\n[[← Return to Main Menu|Start-Complement]]",
+
+"Regulation_Q2_Incorrect_Alt": "<div class=\"section-label regulation\">Regulatory Control</div>\n<h2>Incorrect</h2>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Alternative pathway convertases are regulated by Factor H, Factor I, and DAF (CD55), not C1-INH.\n</div>\n<br>\n[[Try Question Again|Regulation_Intro]]",
+
+"Regulation_Q2_Incorrect_MAC": "<div class=\"section-label regulation\">Regulatory Control</div>\n<h2>Incorrect</h2>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Polymerization of C9 in the Membrane Attack Complex is blocked on host cell membranes by CD59 (Protectin).\n</div>\n<br>\n[[Try Question Again|Regulation_Intro]]",
+
+"Clinical-Notes-Menu": "<div class=\"section-label clinical\">Clinical Medicine</div>\n<h1>Classical Complement Pathway Deficiencies</h1>\n<p>The <strong>CH50 (total haemolytic complement) assay</strong> tests the ability of serum to lyse 50% of antibody-sensitised sheep erythrocytes via the classical pathway (C1-C9). A deficiency in any single component renders the assay severely reduced or absent. Evaluating these case studies illustrates distinct pathway deficiencies with characteristic clinical and laboratory profiles.</p>\n<div class=\"notice-box\">\n<strong>⚠️ Reminder — Immune Complex Clearance:</strong> One critical function of complement is clearing immune complexes. C3b and C4b coat complexes; CR1 on red blood cells then shuttles them to the liver and spleen for macrophage-mediated destruction. Defects in this pathway (C1q, C2, C4) allow immune complexes to deposit in tissues — driving the SLE-like phenotype seen in Cases 1, 2 and 4.\n</div>\n\n<p>''Select a clinical case file to review:''</p>\n\n[[Case 1: C1q Deficiency (9yo F — Recurrent Infections & Lupus-like Rash)|Clinical-Case-1]]\n[[Case 2: C2 Deficiency (34yo M — Recurrent Sinopulmonary Infections & SLE)|Clinical-Case-2]]\n[[Case 3: C3 Deficiency (3yo M — Severe Phenotype / Multi-Pathway Failure)|Clinical-Case-3]]\n[[Case 4: C4A/C4B Null Allele Deficiency (22yo F — Treatment-Refractory SLE)|Clinical-Case-4]]\n[[Case 5: C5 Deficiency (19yo M — Recurrent Neisseria Meningitidis)|Clinical-Case-5]]\n[[📊 Review CH50 vs AP50 Diagnostic Summary Table|Clinical-Diagnostic-Summary]]\n\n<br>\n[[← Return to Main Pathway Selection|Start-Complement]]",
+
+"Clinical-Case-1": "<div class=\"section-label clinical\">Clinical Case Study</div>\n<h2>Case 1: C1q Deficiency [Rare autosomal recessive]</h2>\n<p><strong>Patient Profile:</strong> Female, 9 years old — recurrent infections & lupus-like rash.</p>\n\n<h3>Pathway Blockade Site</h3>\n<p><strong>C1q [BLOCKED]</strong> → C1r/C1s → C4 → C2 → C3 → MAC (C5–C9)</p>\n\n<h3>Clinical Presentation</h3>\n<p>A 9-year-old girl is referred to paediatric immunology with a 3-year history of a photosensitive malar rash, recurrent otitis media, and two prior episodes of pneumococcal bacteraemia. She has mild arthralgia affecting the small joints of her hands. Her mother reports that a maternal uncle died in childhood from 'overwhelming infection.' On examination she has a butterfly-shaped erythematous rash over both cheeks sparing the nasolabial folds, and mild cervical lymphadenopathy.</p>\n\n<h3>Laboratory Findings</h3>\n<div class=\"table-scroll\">\n<table class=\"clinical-table\">\n  <tr><th>Test</th><th>Result</th><th>Reference / Note</th></tr>\n  <tr><td>CH50 (total haemolytic)</td><td><strong>0 U/mL</strong></td><td>Ref: 41–90 U/mL — absent activity</td></tr>\n  <tr><td>C1q antigen level</td><td><strong>&lt;1 mg/dL</strong></td><td>Ref: 14–22 mg/dL — undetectable</td></tr>\n  <tr><td>C4 level</td><td><strong>Low-normal</strong></td><td>Upstream blockade limits consumption</td></tr>\n  <tr><td>ANA / anti-dsDNA</td><td><strong>Positive (1:320)</strong></td><td>Mimics SLE serology</td></tr>\n  <tr><td>AP50 (alternative pathway)</td><td><strong>Normal</strong></td><td>Alternative pathway intact</td></tr>\n  <tr><td>C1q functional assay</td><td><strong>Absent</strong></td><td>Confirms absence of C1q function</td></tr>\n</table>\n</div>\n\n<h3>Pathophysiology</h3>\n<p>C1q is the pattern-recognition subunit of the C1 complex. Its absence abolishes classical pathway activation from the very first step, explaining the zero CH50 despite intact C4 and C3 protein levels. C1q also acts as a bridge molecule for clearing apoptotic cell debris. C1q directly binds exposed <strong>phosphatidylserine</strong>, <strong>DNA</strong>, and <strong>calreticulin</strong> on the surface of apoptotic cells, flagging them for macrophage uptake. Without this function, apoptotic cells accumulate and release nuclear autoantigens (especially dsDNA and histones) — triggering anti-dsDNA antibodies and ANA production. This mechanism produces an SLE-like phenotype in up to 93% of C1q-deficient patients. The inability to opsonise encapsulated bacteria via complement explains the recurrent pneumococcal and Haemophilus infections.</p>\n\n<h3>Management</h3>\n<p>Lifelong prophylactic penicillin V; catch-up immunisation with PCV13, MenACWY, MenB, and Hib vaccines. Hydroxychloroquine for the autoimmune phenotype. Low-threshold antibiotic therapy for febrile illness. Genetic counselling (autosomal recessive — COLEC11/C1QA/B/C loci) and screening of siblings.</p>\n\n[[Return to Clinical Notes Menu|Clinical-Notes-Menu]]",
+
+"Clinical-Case-2": "<div class=\"section-label clinical\">Clinical Case Study</div>\n<h2>Case 2: C2 Deficiency [Most common classical deficiency]</h2>\n<p><strong>Patient Profile:</strong> Male, 34 years old — recurrent sinopulmonary infections & SLE diagnosis.</p>\n\n<h3>Pathway Blockade Site</h3>\n<p>C1q → C1r/C1s → C4 → <strong>C2 [BLOCKED]</strong> → C3 convertase (C4b2a) → MAC</p>\n\n<h3>Clinical Presentation</h3>\n<p>A 34-year-old male solicitor presents with his fourth episode of bacterial sinusitis in 18 months, twice requiring intravenous antibiotics. He was diagnosed with SLE at age 28, with arthritis, a discoid rash, and pleuritis. He recalls his father having 'immune problems.' His SLE has been atypically resistant to standard therapy. He has no history of Neisseria infections. On examination there is bilateral tenderness over the maxillary sinuses and a small pleural rub at the left base.</p>\n\n<h3>Laboratory Findings</h3>\n<div class=\"table-scroll\">\n<table class=\"clinical-table\">\n  <tr><th>Test</th><th>Result</th><th>Reference / Note</th></tr>\n  <tr><td>CH50</td><td><strong>&lt;10 U/mL</strong></td><td>Severely reduced — near absent</td></tr>\n  <tr><td>C2 antigen</td><td><strong>Undetectable</strong></td><td>Ref: 22–34 mg/dL</td></tr>\n  <tr><td>C4 level</td><td><strong>Normal</strong></td><td>C4 cleavage cannot proceed without C2</td></tr>\n  <tr><td>C3 level</td><td><strong>Normal</strong></td><td>Alternative pathway maintains some C3</td></tr>\n  <tr><td>AP50</td><td><strong>Normal</strong></td><td>C2 not used in alternative pathway</td></tr>\n  <tr><td>MBL pathway function</td><td><strong>Reduced</strong></td><td>MBL pathway also uses C2; impaired</td></tr>\n</table>\n</div>\n\n<h3>Pathophysiology</h3>\n<p>C2 is cleaved by C1s to form C2a and C2b. C4b2a (the classical C3 convertase) cannot form without C2a, arresting the cascade before C3 cleavage and abolishing opsonisation via this route. C2 deficiency is the most common inherited complement deficiency in people of Northern European ancestry (approximately 1 in 10,000–20,000), typically linked to the HLA-A25, B18, DR2 haplotype. Because C2 is also used by the lectin/MBL pathway, both CH50 and MBL-dependent haemolysis are impaired, but AP50 is completely normal — a diagnostically useful dissociation. Impaired immune complex clearance predisposes to SLE-like disease in approximately 10–30% of homozygous-deficient individuals.</p>\n\n<h3>Management</h3>\n<p>Prophylactic amoxicillin-clavulanate or azithromycin; pneumococcal, meningococcal, and Hib vaccination with periodic booster doses. SLE managed with hydroxychloroquine and low-dose prednisolone; note that belimumab (anti-BAFF) may be preferred over complement-pathway biologics. Genetic testing (chromosome 6p21.3, MHC class III region) and family cascade testing.</p>\n\n[[Return to Clinical Notes Menu|Clinical-Notes-Menu]]",
+
+"Clinical-Case-3": "<div class=\"section-label clinical\">Clinical Case Study</div>\n<h2>Case 3: C3 Deficiency [Severe phenotype — all pathways affected]</h2>\n<p><strong>Patient Profile:</strong> Male, 3 years old — recurrent severe bacterial infections since infancy.</p>\n\n<h3>Pathway Blockade Site</h3>\n<p>C1–C4–C2 → <strong>C3 [BLOCKED]</strong> → C3b opsonisation → C5 convertase → MAC (C5–C9)</p>\n\n<h3>Clinical Presentation</h3>\n<p>A 3-year-old boy is admitted for the fifth time with pneumococcal meningitis. Since age 6 months he has had recurrent episodes of pneumonia, otitis media, and two prior episodes of septicaemia with Streptococcus pneumoniae. Growth is on the 3rd centile. He is the first child of consanguineous parents (first cousins) of South Asian origin. His parents report that a sibling died at 18 months from an unspecified overwhelming infection. On admission he is febrile (39.2°C), tachycardic, has neck stiffness, and a bulging fontanelle.</p>\n\n<h3>Laboratory Findings</h3>\n<div class=\"table-scroll\">\n<table class=\"clinical-table\">\n  <tr><th>Test</th><th>Result</th><th>Reference / Note</th></tr>\n  <tr><td>CH50</td><td><strong>0 U/mL</strong></td><td>Completely absent</td></tr>\n  <tr><td>AP50</td><td><strong>0 U/mL</strong></td><td>Also absent — C3 required by all pathways</td></tr>\n  <tr><td>C3 antigen level</td><td><strong>&lt;1 mg/dL</strong></td><td>Ref: 90–180 mg/dL — undetectable</td></tr>\n  <tr><td>C4 level</td><td><strong>Normal</strong></td><td>Upstream intact; cannot signal downstream</td></tr>\n  <tr><td>C1q level</td><td><strong>Normal</strong></td><td>Recognition unit unaffected</td></tr>\n  <tr><td>Opsonophagocytosis assay</td><td><strong>Severely impaired</strong></td><td>No C3b deposition on bacteria</td></tr>\n</table>\n</div>\n\n<h3>Pathophysiology</h3>\n<p>C3 is the convergence point of all three complement pathways. Its absence renders the patient unable to generate C3b for opsonisation (via CR1 on phagocytes), C3a for mast cell degranulation, or C5 convertase — eliminating both innate killing and antibody-independent opsonisation simultaneously. This explains why both CH50 and AP50 are zero — a key diagnostic fingerprint distinguishing C3 deficiency from classical-only or alternative-only defects. Secondary C3 deficiency (from consumption — e.g. C3 nephritic factor, MPGN) must be excluded; primary deficiency is autosomal recessive and rare, with consanguinity being a major risk factor. Encapsulated bacteria (pneumococcus, meningococcus, Haemophilus) that rely on complement-mediated opsonisation for clearance cause disproportionate, recurrent, life-threatening disease.</p>\n\n<h3>Management</h3>\n<p>Emergency treatment of active meningitis per local protocol (ceftriaxone + dexamethasone). Long-term: lifelong prophylactic phenoxymethylpenicillin; full immunisation schedule including 13-valent PCV, ACWY and B meningococcal vaccines, Hib, and annual influenza. Regular IVIG infusions considered to supplement opsonising antibody. Genetic counselling and urgent sibling screening (C3 gene on chromosome 19p13.3). Parental education regarding fever response and emergency antibiotic supply.</p>\n\n[[Return to Clinical Notes Menu|Clinical-Notes-Menu]]",
+
+"Clinical-Case-4": "<div class=\"section-label clinical\">Clinical Case Study</div>\n<h2>Case 4: C4A/C4B Null Allele Deficiency [SLE susceptibility locus]</h2>\n<p><strong>Patient Profile:</strong> Female, 22 years old — early-onset SLE refractory to treatment.</p>\n\n<h3>Pathway Blockade Site</h3>\n<p>C1q → C1r/C1s → <strong>C4 [PARTIAL BLOCK]</strong> → C4b2a convertase → C3 → MAC</p>\n\n<h3>Clinical Presentation</h3>\n<p>A 22-year-old woman of West African origin is referred to rheumatology after 18 months of fatigue, a photosensitive facial rash, painful oral ulcers, pleuritis, and diffuse non-scarring alopecia. She has had two prior episodes of non-bacterial (sterile) peritonitis. Blood tests showed lymphopenia and a raised ESR, initially attributed to viral illness. Family history is notable for a maternal aunt with SLE. On examination she has a malar rash, two oral ulcers, and mild bilateral pitting oedema. Urinalysis shows 3+ protein and microscopic haematuria, raising concern for lupus nephritis.</p>\n\n<h3>Laboratory Findings</h3>\n<div class=\"table-scroll\">\n<table class=\"clinical-table\">\n  <tr><th>Test</th><th>Result</th><th>Reference / Note</th></tr>\n  <tr><td>CH50</td><td><strong>18 U/mL</strong></td><td>Ref: 41–90 — substantially reduced</td></tr>\n  <tr><td>C4 total antigen</td><td><strong>4 mg/dL</strong></td><td>Ref: 16–38 mg/dL — severely low</td></tr>\n  <tr><td>C4A isotype</td><td><strong>Undetectable</strong></td><td>Homozygous C4A null allele confirmed</td></tr>\n  <tr><td>C4B isotype</td><td><strong>Low (1 copy)</strong></td><td>One functional C4B allele retained</td></tr>\n  <tr><td>C3 level</td><td><strong>Low (58 mg/dL)</strong></td><td>Ref: 90–180 — consumed by active disease</td></tr>\n  <tr><td>Anti-C1q antibodies</td><td><strong>Positive</strong></td><td>Associated with active nephritis in SLE</td></tr>\n</table>\n</div>\n\n<h3>Pathophysiology</h3>\n<p>C4 serves two key functions in the classical and lectin pathways: forming the C3 convertase (C4b2a), and coating immune complexes via C4b to prevent their tissue deposition. In this patient, reduced total C4 impairs both functions — immune complexes are inadequately opsonised and cannot be transported efficiently by CR1 on erythrocytes to the liver and spleen for clearance. Accumulating immune complexes deposit in the glomerulus and other tissues, driving the SLE phenotype — the same mechanism responsible for SLE-like disease in C1q and C2 deficiency. Residual C4 activity means the classical pathway retains some function — explaining the reduced but not zero CH50. During active disease, remaining C4 is consumed further, causing CH50 depression and low C3. The AP50 remains normal since C4 is not required for the alternative pathway.</p>\n\n<h3>Management</h3>\n<p>Renal biopsy to classify lupus nephritis (likely class III/IV given urinalysis findings). Treatment per EULAR/ACR guidance: hydroxychloroquine as backbone; mycophenolate mofetil or low-dose cyclophosphamide for nephritis induction; belimumab as adjunct. Strict sun protection. Monitor CH50, C3, C4, anti-dsDNA, and urine PCR as disease activity markers. Counsel regarding familial SLE risk — C4 null allele status can be discussed with an immunologist for first-degree relatives. Avoid oestrogen-containing contraception (thrombosis risk in SLE).</p>\n\n[[Return to Clinical Notes Menu|Clinical-Notes-Menu]]",
+
+"Clinical-Case-5": "<div class=\"section-label clinical\">Clinical Case Study</div>\n<h1>Case 5: C5 Deficiency <small>[Terminal complement / MAC deficiency]</small></h1>\n<p><strong>Patient Profile:</strong> Male, 19 years old — recurrent <em>Neisseria meningitidis</em> infections.</p>\n\n<div class=\"key-box\">\n<strong>Pathway Blockade Site</strong><br>\nC1 → C4 → C2 → C3 → <strong>C5 [BLOCKED]</strong> → C6 → C7 → C8 → C9 (MAC)\n</div>\n\n<h2>Clinical Presentation</h2>\n<p>A 19-year-old male university student is admitted for his <strong>second episode of bacterial meningitis</strong> in three years. Both episodes were caused by <em>Neisseria meningitidis</em> (serogroup B on the first occasion, serogroup Y now). He received MenACWY vaccination at age 14 and was fully vaccinated — recurrent disease despite vaccination prompted immunological investigation.</p>\n<p>On admission he is febrile (40.1°C), photophobic, and has a <strong>petechial rash</strong> over the trunk and legs. He is alert but has marked neck stiffness. A paternal uncle reportedly died from ‘meningococcal septicaemia’ at age 22. Blood cultures and CSF culture confirm <em>N. meningitidis</em> serogroup Y.</p>\n\n<h2>Laboratory Findings</h2>\n<div class=\"table-scroll\">\n<table class=\"clinical-table\">\n  <tr><th>Test</th><th>Result</th><th>Reference</th></tr>\n  <tr><td>CH50 (haemolytic complement)</td><td><strong>Undetectable (0%)</strong></td><td>70–130%</td></tr>\n  <tr><td>AP50 (alternative pathway haemolysis)</td><td><strong>Undetectable (0%)</strong></td><td>75–135%</td></tr>\n  <tr><td>C3</td><td><strong>Normal (1.1 g/L)</strong></td><td>0.9–1.8 g/L</td></tr>\n  <tr><td>C4</td><td>Normal</td><td>0.16–0.38 g/L</td></tr>\n  <tr><td>C5 antigen (nephelometry)</td><td><strong>Absent (&lt;2% of normal)</strong></td><td>Present</td></tr>\n  <tr><td>C1q, C2, Factor B</td><td>Normal</td><td>—</td></tr>\n  <tr><td>FBC</td><td>Leukocytosis (21 × 10⁹/L), neutrophilia</td><td>4–11 × 10⁹/L</td></tr>\n  <tr><td>CRP</td><td>228 mg/L</td><td>&lt;5 mg/L</td></tr>\n</table>\n</div>\n\n<h2>Interpretation</h2>\n<div class=\"key-box\">\n<strong>1. Both CH50 and AP50 are undetectable</strong> — terminal complement components (C5–C9) are <em>shared</em> between all pathways; deficiency of any one of them abolishes both assays simultaneously.\n</div>\n<div class=\"key-box\">\n<strong>2. C3 is normal</strong> — this is the critical distinguishing feature from <strong>C3 deficiency</strong>, which also shows zero CH50 and AP50. In MAC deficiency, all upstream components function normally; the block is at the terminal step.\n</div>\n<div class=\"key-box\">\n<strong>3. Selective susceptibility to <em>Neisseria</em></strong> — the MAC is the primary mechanism for killing Gram-negative diplococci, which have thin peptidoglycan walls easily penetrated by the pore. Gram-positive bacteria (e.g. <em>Staphylococcus aureus</em>) have thick cell walls resistant to the MAC; they are cleared by opsonisation and phagocytosis, which remain intact here.\n</div>\n\n<h2>Diagnosis and Management</h2>\n<p><strong>Diagnosis:</strong> Autosomal recessive C5 deficiency (confirmed by absent C5 antigen and normal C3/C4).</p>\n<p><strong>Management:</strong> Long-term prophylactic penicillin V; vaccination against all <em>Neisseria</em> serogroups; family screening.</p>\n\n[[← Return to Clinical Notes Menu|Clinical-Notes-Menu]]",
+
+"Clinical-Diagnostic-Summary": "<div class=\"section-label clinical\">Diagnostic Summary</div>\n<h2>CH50 vs AP50 Dissociation Analysis</h2>\n<p>Evaluating the mathematical divergence between the Classical Line (CH50) and Alternative Line (AP50) performance allows for highly specific mapping of patient pathology before advanced assays begin.</p>\n\n<div class=\"table-scroll\">\n<table class=\"clinical-table\">\n  <thead>\n    <tr><th>Deficiency</th><th>CH50</th><th>AP50</th><th>Clinical Correlate</th></tr>\n  </thead>\n  <tbody>\n    <tr><td><strong>C1q, C1r, C1s, C2, C4</strong></td><td>0 / Absent</td><td>Normal</td><td>SLE-like autoimmunity, encapsulated bacterial infections</td></tr>\n    <tr><td><strong>Factor B, Factor D, Properdin</strong></td><td>Normal</td><td>0 / Absent</td><td>Neisserial and pyogenic infections</td></tr>\n    <tr><td><strong>C3</strong></td><td>0 / Absent</td><td>0 / Absent</td><td>Severe recurrent pyogenic infections</td></tr>\n    <tr><td><strong>C5, C6, C7, C8, C9</strong></td><td>0 / Absent</td><td>0 / Absent</td><td>Recurrent Neisserial infections (Normal C3)</td></tr>\n  </tbody>\n</table>\n</div>\n<br>\n[[← Return to Clinical Notes Menu|Clinical-Notes-Menu]]",
+
+"Retrieval-Intro": "<div class=\"section-label shared\">Self-Assessment</div>\n<h2>MCQ Knowledge Test</h2>\n<p>Test your understanding across all complement pathways and clinical correlations.</p>\n<p>Which complement component is common to the Classical, Alternative, and Lectin pathways?</p>\n\n[[A) C1q|Retrieval-Q1-Incorrect]]\n[[B) C3|Retrieval-Q1-Correct]]\n[[C) Factor B|Retrieval-Q1-Incorrect]]",
+
+"Retrieval-Q1-Correct": "<div class=\"section-label shared\">Self-Assessment</div>\n<h2>Correct!</h2>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> C3 is the central convergence point for all complement pathways.\n</div>\n<br>\n[[← Return to Main Menu|Start-Complement]]",
+
+"Retrieval-Q1-Incorrect": "<div class=\"section-label shared\">Self-Assessment</div>\n<h2>Incorrect</h2>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> C1q is unique to the Classical pathway, and Factor B is unique to the Alternative pathway.\n</div>\n<br>\n[[Try Again|Retrieval-Intro]]"
 };
 
-/* ── JavaScript Engine ────────────────────────────────────── */
+/* ── Execution Engine ────────────────────────────────────── */
 const historyStack = [];
 
 function parseWikiLinks(text) {
