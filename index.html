@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -230,7 +230,7 @@ a.link-internal:active {
 #student-modal {
     position: fixed;
     inset: 0;
-    background: rgba(20,30,80,0.82);
+    background: rgba(20,30,80,0.88);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -238,38 +238,38 @@ a.link-internal:active {
     backdrop-filter: blur(6px);
 }
 .modal-card {
-    background: #fff;
+    background: #ffffff;
     border-radius: 18px;
     padding: 2.6rem 2.2rem 2.2rem;
-    max-width: 390px;
+    max-width: 400px;
     width: 92%;
     text-align: center;
     box-shadow: 0 28px 80px rgba(0,0,0,0.32);
 }
-.modal-card h2 { margin:0 0 0.5rem; color:#1e2d7a; font-size:1.45rem; }
-.modal-card p  { color:#556; font-size:0.95rem; margin:0 0 1.5rem; line-height:1.55; }
+.modal-card h2 { margin: 0 0 0.5rem; color: #1e2d7a; font-size: 1.45rem; border: none; padding: 0; }
+.modal-card p  { color: #556; font-size: 0.95rem; margin: 0 0 1.5rem; line-height: 1.55; }
 #sid-input {
-    width:100%; box-sizing:border-box;
-    font-size:2.4rem; text-align:center;
-    letter-spacing:0.6em; padding:0.5rem 0.3rem;
-    border:2.5px solid #c8d1fa; border-radius:10px;
-    color:#1e2d7a; outline:none; margin-bottom:0.45rem;
-    transition:border-color 0.15s; font-family:monospace;
+    width: 100%; box-sizing: border-box;
+    font-size: 1.8rem; text-align: center;
+    letter-spacing: 0.3em; padding: 0.6rem 0.5rem;
+    border: 2.5px solid #c8d1fa; border-radius: 10px;
+    color: #1e2d7a; outline: none; margin-bottom: 0.45rem;
+    transition: border-color 0.15s; font-family: monospace;
 }
-#sid-input:focus { border-color:#5b6ef5; }
-#sid-input.sid-error { border-color:#e74c3c; animation:shake 0.3s; }
+#sid-input:focus { border-color: #5b6ef5; }
+#sid-input.sid-error { border-color: #e74c3c; animation: shake 0.3s; }
 @keyframes shake {
   0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)}
 }
-#sid-errtxt { color:#c0392b; font-size:0.85rem; min-height:1.3em; margin-bottom:0.75rem; }
+#sid-errtxt { color: #c0392b; font-size: 0.85rem; min-height: 1.3em; margin-bottom: 0.75rem; }
 #sid-btn {
-    width:100%; padding:0.82rem;
-    background:#3d52d5; color:white;
-    border:none; border-radius:10px;
-    font-size:1.05rem; font-weight:600;
-    cursor:pointer; transition:background 0.15s; margin-top:0.3rem;
+    width: 100%; padding: 0.85rem;
+    background: #3d52d5; color: white;
+    border: none; border-radius: 10px;
+    font-size: 1.05rem; font-weight: 600;
+    cursor: pointer; transition: background 0.15s; margin-top: 0.3rem;
 }
-#sid-btn:hover { background:#2a3db8; }
+#sid-btn:hover { background: #2a3db8; }
 
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: .8rem 0; }
 
@@ -377,18 +377,21 @@ a.link-continue:active { background: #152050; }
 </style>
 </head>
 <body>
+
 <div id="student-modal">
   <div class="modal-card">
     <h2>Complement System Activity</h2>
-    <p>Enter your <strong>5-digit PC lab code</strong> to begin.<br>Your code is provided by your instructor.</p>
-    <input type="text" id="sid-input" maxlength="5" inputmode="numeric" placeholder="· · · · ·" autocomplete="off">
+    <p>Enter your <strong>5-digit PC lab code</strong> or student ID to begin.<br>Your code is provided by your instructor.</p>
+    <input type="text" id="sid-input" maxlength="10" placeholder="· · · · ·" autocomplete="off">
     <div id="sid-errtxt"></div>
-    <button id="sid-btn">Begin Activity →</button>
+    <button id="sid-btn" type="button">Begin Activity →</button>
   </div>
 </div>
+
 <div id="story">
   <div id="passage-container"></div>
 </div>
+
 <script>
 const PASSAGES = {
 "Start-Complement": "<h1>The Complement System</h1>\n<p>The complement system is a crucial arm of innate immunity. In this activity you will explore how each pathway is activated, how the enzymatic cascade amplifies, and where the pathways converge.</p>\n\n<div class=\"diagram-container\"><img src=\"C'_Images/Slide1.PNG\" alt=\"Overview of the Complement System Pathways\" class=\"diagram-img\"></div>\n\n<div class=\"key-box\">\n<strong>Core Pathways and Modules:</strong><br>\n1. The Classical Pathway<br>\n2. The Alternative Pathway<br>\n3. The Lectin Pathway<br>\n4. Regulatory Control of Complement\n</div>\n\n<p>Each module features step-by-step decision questions with instant feedback. You can work through the pathways and clinical case studies in any order.</p>\n\n<div class=\"warning-box\">\n<strong>💡 How to get the most from this activity:</strong> When you encounter an option you are unsure about, deliberate carefully. Incorrect options provide detailed explanations of <em>why</em> they are incorrect, reinforcing your conceptual grasp.\n</div>\n\n<p><em>Where would you like to start?</em></p>\n\n[[Explore the Classical Pathway|Classical-Intro]]\n[[Explore the Alternative Pathway|Alternative-Intro]]\n[[Explore the Lectin Pathway|Lectin-Intro]]\n\n<hr style=\"border:none;margin:1rem 0;\">\n\n[[Explore Regulatory Control of Complement|Regulation_Intro]]\n[[Review: Clinical Case Studies & Complement Deficiencies|Clinical-Notes-Menu]]\n\n<hr style=\"border:none;margin:1rem 0;\">\n<a class=\"link-internal mcq-link\" href=\"#\" data-target=\"Retrieval-Intro\">📝 MCQ Self-Test — Retrieval Practice (10 questions)</a>",
@@ -531,5 +534,220 @@ const PASSAGES = {
 
 "Complement-Summary": "<div class=\"section-label shared\">Summary</div>\n<h2>Complement Activation: Key Outcomes</h2>\n<p>Congratulations — you have traced complement activation from recognition through to terminal lysis!</p>\n\n<div class=\"diagram-container\"><img src=\"C'_Images/Slide13.PNG\" alt=\"Summary of complement activation outcomes\" class=\"diagram-img\"></div>\n\n<div class=\"key-box\">\n<strong>Four Major Effector Outcomes:</strong><br>\n1. <strong>Opsonisation:</strong> C3b, iC3b, and C4b tag surfaces for phagocytosis via macrophage/neutrophil CR1 and CR3.<br>\n2. <strong>Chemotaxis &amp; Inflammation:</strong> Anaphylatoxins C5a &gt; C3a &gt; C4a recruit leukocytes and induce microvascular leakage.<br>\n3. <strong>Direct Lysis:</strong> The Membrane Attack Complex (C5b-9) punches transmembrane pores in susceptible Gram-negative bacteria.<br>\n4. <strong>Immune Complex Clearance:</strong> C3b/C4b coating enables erythrocyte CR1 binding for hepatic and splenic disposal.\n</div>\n\n[[Explore Complement Regulation|Regulation_Intro]]\n[[Return to Main Menu|Start-Complement]]",
 
-"Regulation_Intro": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"progress-label\">Regulation · Step 1 of 4</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:25%\"></div></div>\n\n<h2>Complement Regulation: Safeguarding Host Cells</h2>\n<p>Because the complement cascade involves exponential enzymatic amplification and spontaneous tick-over, strict regulatory control is vital to spare bystander host tissues from inflammatory and lytic destruction.</p>\n\n<p><em>What is the primary evolutionary reason host cells express membrane-bound complement regulators?</em></p>\n\n[[A) To shut down active convertases and block MAC assembly on self-membranes|Regulation_Q1_Correct_SelfDefense]]\n[[B) To divert complement consumption exclusively toward red blood cells|Regulation_Q1_Incorrect_RBC]]\n[[C) To completely prevent antibodies from binding to bacterial pathogens
-<!-- deploy trigger -->
+"Regulation_Intro": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"progress-label\">Regulation · Step 1 of 4</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:25%\"></div></div>\n\n<h2>Complement Regulation: Safeguarding Host Cells</h2>\n<p>Because the complement cascade involves exponential enzymatic amplification and spontaneous tick-over, strict regulatory control is vital to spare bystander host tissues from inflammatory and lytic destruction.</p>\n\n<p><em>What is the primary evolutionary reason host cells express membrane-bound complement regulators?</em></p>\n\n[[A) To shut down active convertases and block MAC assembly on self-membranes|Regulation_Q1_Correct_SelfDefense]]\n[[B) To divert complement consumption exclusively toward red blood cells|Regulation_Q1_Incorrect_RBC]]\n[[C) To completely prevent antibodies from binding to bacterial pathogens|Regulation_Q1_Incorrect_Abs]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_Q1_Incorrect_RBC": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Host red blood cells are heavily protected with regulators (such as DAF and CD59); loss of these regulators results in paroxysmal nocturnal haemoglobinuria.\n</div>\n[[← Try again|Regulation_Intro]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_Q1_Incorrect_Abs": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Complement regulators safeguard host cells without interfering with protective antibody deposition on foreign pathogens.\n</div>\n[[← Try again|Regulation_Intro]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_Q1_Correct_SelfDefense": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> Regulators specifically recognize self-cell surfaces (via sialic acid and membrane-bound glycoproteins) to extinguish convertase assembly and block pore formation on host tissue.\n</div>\n[[Continue → Soluble Regulators: C1-INH|Regulation_SolubleRegulators]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_SolubleRegulators": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"progress-label\">Regulation · Step 2 of 4</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:50%\"></div></div>\n\n<h2>Soluble Regulators: C1 Inhibitor (C1-INH)</h2>\n<p><strong>C1 Inhibitor (C1-INH)</strong> is a circulating serpin (serine protease inhibitor) that permanently inactivates early initiating proteases:</p>\n<div class=\"key-box\">\n• Binds and detaches active <strong>C1r and C1s</strong> from C1q (Classical)<br>\n• Inactivates <strong>MASP-1 and MASP-2</strong> (Lectin)<br>\n• Inhibits <strong>plasma kallikrein and Factor XIIa</strong> in the contact/kallikrein-kinin system\n</div>\n\n<div class=\"diagram-container\"><img src=\"C'_Images/Slide14.png\" alt=\"C1-INH regulation of C1 and MASPs\" class=\"diagram-img\"></div>\n\n<p><em>Deficiency or functional impairment of C1-INH causes which clinical syndrome?</em></p>\n\n[[A) Paroxysmal nocturnal haemoglobinuria (PNH)|Regulation_Q2_Incorrect_PNH]]\n[[B) Hereditary angioedema (HAE)|Regulation_Q2_Correct_HAE]]\n[[C) Atypical haemolytic uraemic syndrome (aHUS)|Regulation_Q2_Incorrect_aHUS]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_Q2_Incorrect_PNH": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> PNH is caused by somatic mutations in <em>PIGA</em>, causing deficiency of GPI-anchored surface proteins CD55 and CD59.\n</div>\n[[← Try again|Regulation_SolubleRegulators]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_Q2_Incorrect_aHUS": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> aHUS is typically caused by mutations in alternative pathway regulators (Factor H, Factor I, or CD46/MCP).\n</div>\n[[← Try again|Regulation_SolubleRegulators]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_Q2_Correct_HAE": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> C1-INH deficiency causes <strong>Hereditary Angioedema (HAE)</strong>. Unregulated kallikrein overproduces <strong>bradykinin</strong>, leading to recurrent episodes of non-pruritic, life-threatening laryngeal and subcutaneous angioedema.\n</div>\n[[Continue → Factor H & Alternative Pathway Control|Regulation_FactorH]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_FactorH": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"progress-label\">Regulation · Step 3 of 4</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:75%\"></div></div>\n\n<h2>Factor H: Controlling Alternative Amplification</h2>\n<p><strong>Factor H</strong> is a key fluid-phase regulator that preferentially binds to sialic acid and glycosaminoglycans on self host cells:</p>\n<div class=\"key-box\">\n1. Competes with Factor B for binding to surface C3b<br>\n2. <strong>Decay-accelerating activity:</strong> Displaces Bb from assembled C3bBb<br>\n3. <strong>Cofactor activity:</strong> Enables the serine protease <strong>Factor I</strong> to cleave C3b into inactive iC3b\n</div>\n\n<div class=\"diagram-container\"><img src=\"C'_Images/Slide14.1.png\" alt=\"Decay accelerating activity on C3 convertases\" class=\"diagram-img\"></div>\n<div class=\"diagram-container\"><img src=\"C'_Images/Slide14.2.png\" alt=\"Factor I cofactor activity cleaving C3b and C4b\" class=\"diagram-img\"></div>\n\n<p><em>Which partner enzyme executes the permanent proteolytic cleavage of C3b in the presence of Factor H?</em></p>\n\n[[A) Factor D|Regulation-Q3-Incorrect-FactorD]]\n[[B) Properdin|Regulation-Q3-Incorrect-Properdin]]\n[[C) Factor I|Regulation_Q3_Correct_FactorI]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation-Q3-Incorrect-FactorD": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Factor D cleaves Factor B to activate the alternative pathway convertase; it does not inactivate C3b.\n</div>\n[[← Try again|Regulation_FactorH]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation-Q3-Incorrect-Properdin": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Properdin is the positive stabilizer of the C3bBb complex.\n</div>\n[[← Try again|Regulation_FactorH]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_Q3_Correct_FactorI": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> <strong>Factor I</strong> is the circulating serine protease that cleaves C3b into inactive iC3b (and C4b into C4c/C4d), but it can only do so in the presence of cofactor proteins like Factor H, MCP (CD46), or CR1.\n</div>\n[[Continue → Cell-Bound Regulators & MAC Inhibition|Regulation_CellBound]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_CellBound": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"progress-label\">Regulation · Step 4 of 4</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:100%\"></div></div>\n\n<h2>Cell-Bound Regulators &amp; Terminal Pore Control</h2>\n<p>Host membranes express specialized surface-anchored regulators:</p>\n<div class=\"key-box\">\n<strong>DAF (CD55, Decay-Accelerating Factor):</strong> Dissociates C4b2a and C3bBb convertases on host membranes.<br>\n<strong>MCP (CD46, Membrane Cofactor Protein):</strong> Membrane-bound cofactor for Factor I-mediated cleavage of C3b and C4b.<br>\n<strong>CD59 (Protectin):</strong> GPI-anchored membrane protein that physically blocks the terminal pathway.\n</div>\n\n<div class=\"diagram-container\"><img src=\"C'_Images/Slide14.3.png\" alt=\"CD59 blocking Membrane Attack Complex formation\" class=\"diagram-img\"></div>\n\n<p><em>By what specific mechanism does CD59 prevent osmotic lysis of host cells?</em></p>\n\n[[A) It binds C5b-8 and prevents the incorporation and polymerisation of C9|Regulation-Q4-Correct-CD59]]\n[[B) It accelerates the decay of C4b2a convertases on host surfaces|Regulation-Q4-Incorrect-DAFAction]]\n[[C) It cleaves C5a into an inactive peptide|Regulation-Q4-Incorrect-C5aCarboxy]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation-Q4-Incorrect-DAFAction": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Accelerating convertase decay is the specific function of DAF (CD55), not CD59.\n</div>\n[[← Try again|Regulation_CellBound]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation-Q4-Incorrect-C5aCarboxy": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-incorrect\">\n<strong>Incorrect.</strong> Carboxypeptidase N in serum cleaves C5a into C5a-des-Arg, not CD59.\n</div>\n[[← Try again|Regulation_CellBound]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation-Q4-Correct-CD59": "<div class=\"section-label regulation\">Regulation</div>\n<div class=\"feedback-correct\">\n<strong>Correct!</strong> <strong>CD59 (Protectin)</strong> embeds in host membranes and binds the assembling C5b-8 complex, physically preventing C9 molecules from unrolling, polymerising, and punching a transmembrane pore.\n</div>\n<div class=\"notice-box\"><strong>Clinical Milestone:</strong> In PNH, clonal deficiency of the GPI anchor eliminates both CD55 and CD59 from red cell membranes, allowing unchecked MAC lysis and chronic intravascular haemolytic anaemia.</div>\n[[Continue → Regulation Summary|Regulation_Summary]]\n\n<div class=\"menu-exit-container\">\n[[🏠 Return to Main Menu|Start-Complement]]\n</div>",
+
+"Regulation_Summary": "<div class=\"section-label regulation\">Summary</div>\n<h2>Complement Regulation: Summary</h2>\n<p>You have mastered the multi-tiered control networks of the complement system.</p>\n\n<div class=\"diagram-container\"><img src=\"C'_Images/Slide15.png\" alt=\"Carboxypeptidase inactivation of anaphylatoxins\" class=\"diagram-img\"></div>\n<div class=\"diagram-container\"><img src=\"C'_Images/Slide16.png\" alt=\"Summary of complement system regulation\" class=\"diagram-img\"></div>\n\n<div class=\"key-box\">\n<strong>1. Early Initiation Control:</strong> C1-INH permanently inactivates C1r, C1s, and MASP-1/2.<br>\n<strong>2. Convertase Decay &amp; Inactivation:</strong><br>\n• <strong>DAF (CD55):</strong> Dissociates pre-formed convertases (C4b2a and C3bBb).<br>\n• <strong>Factor H:</strong> Soluble decay accelerator and Factor I cofactor on sialic acid-rich surfaces.<br>\n• <strong>MCP (CD46):</strong> Surface membrane cofactor for Factor I cleavage of C3b/C4b.<br>\n• <strong>Factor I:</strong> Serine protease cleaving C3b → inactive iC3b.<br>\n<strong>3. Terminal Lysis Blockade:</strong> CD59 binds C5b-8 and stops C9 polymerisation.\n</div>\n[[Return to Main Menu|Start-Complement]]",
+
+"Retrieval-Intro": "<div class=\"section-label shared\">Retrieval Practice</div>\n<h2>Test Yourself: Retrieval Practice</h2>\n<p>This 10-question self-test is designed to reinforce your recall of pathway components, enzymology, and clinical correlations. An effortful retrieval attempt before viewing answer options strengthens memory retention.</p>\n<div class=\"key-box\">\n<strong>Learning Tip:</strong> Read each question stem carefully and formulate the answer in your mind before inspecting the choices.\n</div>\n<br>\n[[Start Retrieval Practice (Question 1 of 10)|Retrieval-Q1]]",
+
+"Retrieval-Q1": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"progress-label\">Retrieval Practice · Question 1 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:0%\"></div></div>\n\n<h2>Within the multi-protein C1 complex, which statement accurately outlines the distinct functional roles of C1q, C1r, and C1s?</h2>\n\n[[A) C1q cleaves C4; C1r recognises antibody Fc; C1s cleaves C2|Retrieval-Q1-Wrong-1]]\n[[B) C1q recognises antibody Fc; C1r activates C1s; C1s cleaves C4 and C2|Retrieval-Q1-Correct]]\n[[C) C1s recognises antigen; C1r cleaves C4; C1q activates C3 directly|Retrieval-Q1-Wrong-2]]\n[[D) All three subunits possess identical serine protease activity targeting C3|Retrieval-Q1-Wrong-3]]",
+
+"Retrieval-Q1-Correct": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\n<strong>C1q:</strong> Recognition subunit; binds IgM or clustered IgG Fc regions.<br>\n<strong>C1r:</strong> Serine protease; autoactivates upon C1q binding, then cleaves C1s.<br>\n<strong>C1s:</strong> Active serine protease; cleaves native C4, then C2.\n</div>\n[[Next Question →|Retrieval-Q2]]",
+
+"Retrieval-Q1-Wrong-1": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C1q has no catalytic or enzymatic domain; C1s cleaves both C4 and C2.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C1q recognises antibody Fc; C1r activates C1s; C1s cleaves C4 and C2.</div>\n[[Next Question →|Retrieval-Q2]]",
+
+"Retrieval-Q1-Wrong-2": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C1q is the recognition subunit; C1s is the effector protease.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C1q recognises antibody Fc; C1r activates C1s; C1s cleaves C4 and C2.</div>\n[[Next Question →|Retrieval-Q2]]",
+
+"Retrieval-Q1-Wrong-3": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Only C1r and C1s are serine proteases, and neither cleaves C3 directly.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C1q recognises antibody Fc; C1r activates C1s; C1s cleaves C4 and C2.</div>\n[[Next Question →|Retrieval-Q2]]",
+
+"Retrieval-Q2": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"progress-label\">Retrieval Practice · Question 2 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:10%\"></div></div>\n\n<h2>How does the classical pathway C3 convertase assemble, and what is unusual regarding C2 nomenclature?</h2>\n\n[[A) C4b anchors to the surface; C2 binds C4b and is cleaved by C1s into C2b (released) and C2a (bound catalytic fragment)|Retrieval-Q2-Correct]]\n[[B) C2 is cleaved by C1q into C2a (small) and C2b (large); C4b2b forms the convertase|Retrieval-Q2-Wrong-1]]\n[[C) C4a binds surface Factor B; Factor D cleaves it to form C4aBb|Retrieval-Q2-Wrong-2]]\n[[D) C4b2a forms entirely in free plasma solution without attaching to surfaces|Retrieval-Q2-Wrong-3]]",
+
+"Retrieval-Q2-Correct": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\nC4b anchors covalently to the target surface. C2 binds C4b and is cleaved by C1s. By historical convention, <strong>C2a is the larger catalytic fragment</strong> that remains bound to form <strong>C4b2a</strong>, while C2b is released.</div>\n[[Next Question →|Retrieval-Q3]]",
+
+"Retrieval-Q2-Wrong-1": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C1q has no protease activity (C1s performs the cleavage), and in standard nomenclature C2a is the larger fragment that stays bound.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C4b anchors to the surface; C2 binds C4b and is cleaved by C1s into C2b (released) and C2a (bound catalytic fragment).</div>\n[[Next Question →|Retrieval-Q3]]",
+
+"Retrieval-Q2-Wrong-2": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Factor B and Factor D belong to the alternative pathway, not the classical pathway.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C4b anchors to the surface; C2 binds C4b and is cleaved by C1s into C2b (released) and C2a (bound catalytic fragment).</div>\n[[Next Question →|Retrieval-Q3]]",
+
+"Retrieval-Q2-Wrong-3": "<div class=\"section-label shared\">Classical Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C4b must anchor covalently to the target membrane via its thioester bond; unanchored C4b rapidly hydrolyses and is inactivated.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C4b anchors to the surface; C2 binds C4b and is cleaved by C1s into C2b (released) and C2a (bound catalytic fragment).</div>\n[[Next Question →|Retrieval-Q3]]",
+
+"Retrieval-Q3": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"progress-label\">Retrieval Practice · Question 3 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:20%\"></div></div>\n\n<h2>Which mechanism explains why continuous alternative pathway 'C3 tick-over' does not routinely damage healthy host erythrocytes?</h2>\n\n[[A) C3 tick-over can only occur in the presence of Gram-negative bacterial lipopolysaccharide|Retrieval-Q3-Wrong-1]]\n[[B) Healthy host membranes express regulators like DAF and bind Factor H to rapidly inactivate deposited C3b|Retrieval-Q3-Correct]]\n[[C) Human red blood cells lack surface water molecules required for C3 hydrolysis|Retrieval-Q3-Wrong-2]]\n[[D) Factor D is exclusively active inside lymph nodes and excluded from the systemic circulation|Retrieval-Q3-Wrong-3]]",
+
+"Retrieval-Q3-Correct": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\nHost cells carry surface glycoproteins rich in sialic acid that recruit soluble <strong>Factor H</strong>, and express membrane <strong>DAF (CD55)</strong> and <strong>MCP (CD46)</strong>. These factors disassemble convertases and facilitate Factor I cleavage of C3b into inactive iC3b.</div>\n[[Next Question →|Retrieval-Q4]]",
+
+"Retrieval-Q3-Wrong-1": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C3 tick-over is spontaneous and basal, occurring constantly in normal plasma without microbial triggers.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Healthy host membranes express regulators like DAF and bind Factor H to rapidly inactivate deposited C3b.</div>\n[[Next Question →|Retrieval-Q4]]",
+
+"Retrieval-Q3-Wrong-2": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Hydrolysis of C3 occurs in the aqueous plasma fluid phase, not on the red cell membrane.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Healthy host membranes express regulators like DAF and bind Factor H to rapidly inactivate deposited C3b.</div>\n[[Next Question →|Retrieval-Q4]]",
+
+"Retrieval-Q3-Wrong-3": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Factor D circulates constitutively throughout systemic blood plasma.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Healthy host membranes express regulators like DAF and bind Factor H to rapidly inactivate deposited C3b.</div>\n[[Next Question →|Retrieval-Q4]]",
+
+"Retrieval-Q4": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"progress-label\">Retrieval Practice · Question 4 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:30%\"></div></div>\n\n<h2>How do the functions of Properdin (Factor P) and Factor H contrast in regulating the alternative pathway?</h2>\n\n[[A) Both molecules act as cofactors for Factor I-mediated cleavage of C3b|Retrieval-Q4-Wrong-1]]\n[[B) Properdin cleaves Factor B, whereas Factor H cleaves native C3|Retrieval-Q4-Wrong-2]]\n[[C) Properdin binds and stabilizes C3bBb (positive regulator); Factor H accelerates convertase decay and aids C3b inactivation (negative regulator)|Retrieval-Q4-Correct]]\n[[D) Properdin inhibits terminal MAC pores, whereas Factor H activates C1q|Retrieval-Q4-Wrong-3]]",
+
+"Retrieval-Q4-Correct": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\n<strong>Properdin:</strong> Sole positive regulator; binds C3bBb, extending its half-life ~10-fold.<br>\n<strong>Factor H:</strong> Negative regulator; displaces Bb from convertases and serves as a cofactor for Factor I to cleave C3b → inactive iC3b.</div>\n[[Next Question →|Retrieval-Q5]]",
+
+"Retrieval-Q4-Wrong-1": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Properdin does not assist Factor I; it actively protects and stabilizes the active convertase.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Properdin binds and stabilizes C3bBb (positive regulator); Factor H accelerates convertase decay and aids C3b inactivation (negative regulator).</div>\n[[Next Question →|Retrieval-Q5]]",
+
+"Retrieval-Q4-Wrong-2": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Neither protein is a protease. Factor D cleaves Factor B, and convertases cleave C3.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Properdin binds and stabilizes C3bBb (positive regulator); Factor H accelerates convertase decay and aids C3b inactivation (negative regulator).</div>\n[[Next Question →|Retrieval-Q5]]",
+
+"Retrieval-Q4-Wrong-3": "<div class=\"section-label shared\">Alternative Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> CD59 inhibits MAC pores, and C1q is initiated by antibodies, not Factor H.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Properdin binds and stabilizes C3bBb (positive regulator); Factor H accelerates convertase decay and aids C3b inactivation (negative regulator).</div>\n[[Next Question →|Retrieval-Q5]]",
+
+"Retrieval-Q5": "<div class=\"section-label shared\">Lectin Pathway</div>\n<div class=\"progress-label\">Retrieval Practice · Question 5 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:40%\"></div></div>\n\n<h2>In the lectin pathway, how is MASP-2 activated, and what are its direct catalytic substrates?</h2>\n\n[[A) MASP-2 autoactivates on contact with albumin and directly cleaves C5|Retrieval-Q5-Wrong-1]]\n[[B) MBL/ficolin carbohydrate binding triggers MASP-1 autoactivation; MASP-1 cleaves MASP-2; active MASP-2 cleaves C4 and C2|Retrieval-Q5-Correct]]\n[[C) MASP-2 is cleaved by circulating Factor D and then cleaves Factor B|Retrieval-Q5-Wrong-2]]\n[[D) MASP-2 binds bacterial peptidoglycan directly and polymerises C9|Retrieval-Q5-Wrong-3]]",
+
+"Retrieval-Q5-Correct": "<div class=\"section-label shared\">Lectin Pathway</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\nMBL/ficolin engagement causes conformational changes activating <strong>MASP-1</strong>, which cleaves and activates <strong>MASP-2</strong>. MASP-2 then cleaves C4 and C2 to form the C4b2a convertase.</div>\n[[Next Question →|Retrieval-Q6]]",
+
+"Retrieval-Q5-Wrong-1": "<div class=\"section-label shared\">Lectin Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Albumin is an inert plasma carrier; MASP-2 acts upstream on C4 and C2, not C5.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> MBL/ficolin carbohydrate binding triggers MASP-1 autoactivation; MASP-1 cleaves MASP-2; active MASP-2 cleaves C4 and C2.</div>\n[[Next Question →|Retrieval-Q6]]",
+
+"Retrieval-Q5-Wrong-2": "<div class=\"section-label shared\">Lectin Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Factor D and Factor B belong strictly to the alternative pathway.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> MBL/ficolin carbohydrate binding triggers MASP-1 autoactivation; MASP-1 cleaves MASP-2; active MASP-2 cleaves C4 and C2.</div>\n[[Next Question →|Retrieval-Q6]]",
+
+"Retrieval-Q5-Wrong-3": "<div class=\"section-label shared\">Lectin Pathway</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> MASP-2 is an early serine protease, not a terminal pore component.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> MBL/ficolin carbohydrate binding triggers MASP-1 autoactivation; MASP-1 cleaves MASP-2; active MASP-2 cleaves C4 and C2.</div>\n[[Next Question →|Retrieval-Q6]]",
+
+"Retrieval-Q6": "<div class=\"section-label shared\">Lectin & Classical Analogies</div>\n<div class=\"progress-label\">Retrieval Practice · Question 6 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:50%\"></div></div>\n\n<h2>Why are C1q and MBL/ficolins described as structural and functional analogues?</h2>\n\n[[A) Both are monomeric proteases that directly cleave C3 in the circulation|Retrieval-Q6-Wrong-1]]\n[[B) Both assemble into intracellular transcription factors regulating interferon release|Retrieval-Q6-Wrong-2]]\n[[C) Both are multimeric pattern-recognition complexes that pair with serine proteases to assemble identical C4b2a convertases|Retrieval-Q6-Correct]]\n[[D) Both bind exclusively to viral RNA genomes on host ribosomes|Retrieval-Q6-Wrong-3]]",
+
+"Retrieval-Q6-Correct": "<div class=\"section-label shared\">Lectin & Classical Analogies</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\nBoth display multimeric 'bouquet' architectures with collagen-like stalks and globular recognition heads. C1q pairs with C1r/C1s, while MBL/ficolins pair with MASP-1/MASP-2. Both pathways generate the <strong>identical C3 convertase (C4b2a)</strong>.</div>\n[[Next Question →|Retrieval-Q7]]",
+
+"Retrieval-Q6-Wrong-1": "<div class=\"section-label shared\">Lectin & Classical Analogies</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Neither molecule is a protease, nor are they monomeric.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Both are multimeric pattern-recognition complexes that pair with serine proteases to assemble identical C4b2a convertases.</div>\n[[Next Question →|Retrieval-Q7]]",
+
+"Retrieval-Q6-Wrong-2": "<div class=\"section-label shared\">Lectin & Classical Analogies</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Complement recognition complexes operate in extracellular fluids and on cell surfaces.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Both are multimeric pattern-recognition complexes that pair with serine proteases to assemble identical C4b2a convertases.</div>\n[[Next Question →|Retrieval-Q7]]",
+
+"Retrieval-Q6-Wrong-3": "<div class=\"section-label shared\">Lectin & Classical Analogies</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> They recognize surface-displayed Fc domains or carbohydrates, not intracellular RNA.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Both are multimeric pattern-recognition complexes that pair with serine proteases to assemble identical C4b2a convertases.</div>\n[[Next Question →|Retrieval-Q7]]",
+
+"Retrieval-Q7": "<div class=\"section-label shared\">Terminal Pathway & MAC</div>\n<div class=\"progress-label\">Retrieval Practice · Question 7 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:60%\"></div></div>\n\n<h2>What is the precise sequence of assembly from C5 cleavage to the completed Membrane Attack Complex?</h2>\n\n[[A) C5 convertase cleaves C5 → C5a + C5b; C5b sequentially binds C6, C7 (membrane insertion), C8, and 12–18 C9 monomers to form the pore|Retrieval-Q7-Correct]]\n[[B) C5 convertase cleaves C5b into C5a; C5a polymerises directly with C8 to create a channel|Retrieval-Q7-Wrong-1]]\n[[C) C5b inserts into the membrane first, then recruits C8, C7, and C6 in reverse order|Retrieval-Q7-Wrong-2]]\n[[D) C5 convertase cleaves C9 directly, which spontaneously multimerises without C5b, C6, C7, or C8|Retrieval-Q7-Wrong-3]]",
+
+"Retrieval-Q7-Correct": "<div class=\"section-label shared\">Terminal Pathway & MAC</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\n1. C5 cleaved → C5b + C5a (released).<br>\n2. C5b binds C6 → C5b-6.<br>\n3. C5b-6 binds C7 → C5b-7 inserts into the membrane lipid bilayer.<br>\n4. C8 binds → C5b-8 punctures a small 10 Å leak.<br>\n5. Multiple C9 molecules (12–18) polymerise → C5b-9 full 100 Å pore.</div>\n[[Next Question →|Retrieval-Q8]]",
+
+"Retrieval-Q7-Wrong-1": "<div class=\"section-label shared\">Terminal Pathway & MAC</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C5a is the soluble anaphylatoxin; C5b is the fragment that anchors MAC assembly.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C5 convertase cleaves C5 → C5a + C5b; C5b sequentially binds C6, C7 (membrane insertion), C8, and 12–18 C9 monomers to form the pore.</div>\n[[Next Question →|Retrieval-Q8]]",
+
+"Retrieval-Q7-Wrong-2": "<div class=\"section-label shared\">Terminal Pathway & MAC</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C5b cannot insert into membranes alone; membrane insertion requires C7.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C5 convertase cleaves C5 → C5a + C5b; C5b sequentially binds C6, C7 (membrane insertion), C8, and 12–18 C9 monomers to form the pore.</div>\n[[Next Question →|Retrieval-Q8]]",
+
+"Retrieval-Q7-Wrong-3": "<div class=\"section-label shared\">Terminal Pathway & MAC</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C9 is not cleaved by the C5 convertase; it polymerises in response to the C5b-8 nucleation complex.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C5 convertase cleaves C5 → C5a + C5b; C5b sequentially binds C6, C7 (membrane insertion), C8, and 12–18 C9 monomers to form the pore.</div>\n[[Next Question →|Retrieval-Q8]]",
+
+"Retrieval-Q8": "<div class=\"section-label shared\">Effector Outcomes</div>\n<div class=\"progress-label\">Retrieval Practice · Question 8 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:70%\"></div></div>\n\n<h2>Which matching correctly links the biological effector outcome with its primary complement mediator?</h2>\n\n[[A) Opsonisation: C5a; Chemotaxis: C3b; Lysis: Factor H|Retrieval-Q8-Wrong-1]]\n[[B) Opsonisation: C3b/iC3b; Chemotaxis: C5a/C3a; Lysis: C5b-9 (MAC)|Retrieval-Q8-Correct]]\n[[C) Opsonisation: Properdin; Chemotaxis: C1q; Lysis: C4a|Retrieval-Q8-Wrong-2]]\n[[D) Opsonisation: C9; Chemotaxis: Factor B; Lysis: C2a|Retrieval-Q8-Wrong-3]]",
+
+"Retrieval-Q8-Correct": "<div class=\"section-label shared\">Effector Outcomes</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\n• <strong>Opsonisation:</strong> C3b and iC3b tag pathogens for phagocyte CR1/CR3.<br>\n• <strong>Chemotaxis &amp; Inflammation:</strong> Anaphylatoxins C5a &gt; C3a recruit and activate leukocytes.<br>\n• <strong>Lysis:</strong> The C5b-9 MAC pore disrupts target cell osmotic integrity.</div>\n[[Next Question →|Retrieval-Q9]]",
+
+"Retrieval-Q8-Wrong-1": "<div class=\"section-label shared\">Effector Outcomes</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Roles are scrambled: C3b is the opsonin, C5a is the chemoattractant, and MAC causes lysis.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Opsonisation: C3b/iC3b; Chemotaxis: C5a/C3a; Lysis: C5b-9 (MAC).</div>\n[[Next Question →|Retrieval-Q9]]",
+
+"Retrieval-Q8-Wrong-2": "<div class=\"section-label shared\">Effector Outcomes</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Properdin stabilizes convertases; C1q recognizes antibodies; C4a is a weak anaphylatoxin.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Opsonisation: C3b/iC3b; Chemotaxis: C5a/C3a; Lysis: C5b-9 (MAC).</div>\n[[Next Question →|Retrieval-Q9]]",
+
+"Retrieval-Q8-Wrong-3": "<div class=\"section-label shared\">Effector Outcomes</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C9 forms pores; Factor B forms convertases; C2a is a convertase catalytic subunit.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Opsonisation: C3b/iC3b; Chemotaxis: C5a/C3a; Lysis: C5b-9 (MAC).</div>\n[[Next Question →|Retrieval-Q9]]",
+
+"Retrieval-Q9": "<div class=\"section-label shared\">Regulatory Mechanisms</div>\n<div class=\"progress-label\">Retrieval Practice · Question 9 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:80%\"></div></div>\n\n<h2>Which matching accurately pairs each complement regulator with its mechanism of action?</h2>\n\n[[A) C1-INH blocks C9 polymerisation; DAF activates Factor I; CD59 cleaves C4|Retrieval-Q9-Wrong-1]]\n[[B) Factor H cleaves C5; CD59 accelerates C3 convertase decay; C1-INH stabilizes properdin|Retrieval-Q9-Wrong-2]]\n[[C) All complement regulators act exclusively by hydrolysing fluid-phase C3|Retrieval-Q9-Wrong-3]]\n[[D) C1-INH inactivates C1r/s and MASPs; Factor H/I inactivate C3b; DAF accelerates convertase decay; CD59 blocks C9 polymerisation|Retrieval-Q9-Correct]]",
+
+"Retrieval-Q9-Correct": "<div class=\"section-label shared\">Regulatory Mechanisms</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\n• <strong>C1-INH:</strong> Serpin that inactivates C1r, C1s, and MASP-1/2.<br>\n• <strong>Factor H + Factor I:</strong> Inactivate C3b into iC3b.<br>\n• <strong>DAF (CD55):</strong> Dissociates C3/C5 convertases on host membranes.<br>\n• <strong>CD59:</strong> Binds C5b-8 to block C9 pore polymerisation.</div>\n[[Next Question →|Retrieval-Q10]]",
+
+"Retrieval-Q9-Wrong-1": "<div class=\"section-label shared\">Regulatory Mechanisms</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> CD59 blocks C9 polymerisation; C1-INH targets C1r/C1s/MASPs.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C1-INH inactivates C1r/s and MASPs; Factor H/I inactivate C3b; DAF accelerates convertase decay; CD59 blocks C9 polymerisation.</div>\n[[Next Question →|Retrieval-Q10]]",
+
+"Retrieval-Q9-Wrong-2": "<div class=\"section-label shared\">Regulatory Mechanisms</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Factor H is not a protease; CD59 targets MAC assembly, not convertases.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C1-INH inactivates C1r/s and MASPs; Factor H/I inactivate C3b; DAF accelerates convertase decay; CD59 blocks C9 polymerisation.</div>\n[[Next Question →|Retrieval-Q10]]",
+
+"Retrieval-Q9-Wrong-3": "<div class=\"section-label shared\">Regulatory Mechanisms</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> Regulators act at multiple distinct steps: initiation, convertases, and terminal pore assembly.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> C1-INH inactivates C1r/s and MASPs; Factor H/I inactivate C3b; DAF accelerates convertase decay; CD59 blocks C9 polymerisation.</div>\n[[Next Question →|Retrieval-Q10]]",
+
+"Retrieval-Q10": "<div class=\"section-label shared\">Clinical Diagnostics</div>\n<div class=\"progress-label\">Retrieval Practice · Question 10 of 10</div>\n<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:90%\"></div></div>\n\n<h2>A 20-year-old presents with recurrent Neisseria meningitidis meningitis. Diagnostic testing reveals CH50 of 0 U/mL, AP50 of 0 U/mL, but normal serum C3 and C4 levels. What is the most likely underlying diagnosis?</h2>\n\n[[A) Homozygous C3 deficiency|Retrieval-Q10-Wrong-1]]\n[[B) Congenital terminal complement (MAC: C5–C9) deficiency|Retrieval-Q10-Correct]]\n[[C) Isolated C1q deficiency|Retrieval-Q10-Wrong-2]]\n[[D) C1-esterase inhibitor deficiency|Retrieval-Q10-Wrong-3]]",
+
+"Retrieval-Q10-Correct": "<div class=\"section-label shared\">Clinical Diagnostics</div>\n<div class=\"feedback-correct\"><strong>Correct!</strong></div>\n<div class=\"key-box\">\n<strong>Terminal complement deficiency (C5, C6, C7, C8, or C9):</strong><br>\n• Both CH50 and AP50 require the MAC to lyse erythrocytes, so both read <strong>0 U/mL</strong>.<br>\n• Because upstream activation is intact, <strong>C3 and C4 remain normal</strong>.<br>\n• Failure of MAC pore formation causes selective vulnerability to invasive <em>Neisseria</em> infections.</div>\n[[Finish Retrieval Practice|Retrieval-Complete]]",
+
+"Retrieval-Q10-Wrong-1": "<div class=\"section-label shared\">Clinical Diagnostics</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> In C3 deficiency, serum C3 is undetectable (&lt;1 mg/dL), and patients suffer severe multi-pathway broad pyogenic infections starting in infancy.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Congenital terminal complement (MAC: C5–C9) deficiency.</div>\n[[Finish Retrieval Practice|Retrieval-Complete]]",
+
+"Retrieval-Q10-Wrong-2": "<div class=\"section-label shared\">Clinical Diagnostics</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> In C1q deficiency, AP50 is completely normal because the alternative pathway does not use C1q.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Congenital terminal complement (MAC: C5–C9) deficiency.</div>\n[[Finish Retrieval Practice|Retrieval-Complete]]",
+
+"Retrieval-Q10-Wrong-3": "<div class=\"section-label shared\">Clinical Diagnostics</div>\n<div class=\"feedback-incorrect\"><strong>Incorrect.</strong> C1-INH deficiency causes hereditary angioedema with depressed C4, normal AP50, and recurrent swelling without bacterial meningitis.</div>\n<div class=\"key-box\"><strong>Correct answer:</strong> Congenital terminal complement (MAC: C5–C9) deficiency.</div>\n[[Finish Retrieval Practice|Retrieval-Complete]]",
+
+"Retrieval-Complete": "<div class=\"section-label shared\">Retrieval Practice Complete</div>\n<h2>Retrieval Practice Complete!</h2>\n<p>You have worked through all 10 retrieval questions covering initiation, amplification, regulation, and clinical diagnostics.</p>\n<div class=\"key-box\">\n<strong>Key Takeaways Reviewed:</strong><br>\n• C1 complex organisation: C1q (recognition) → C1r (autoactivating protease) → C1s (catalytic protease).<br>\n• C3 convertases: Classical/Lectin (C4b2a) vs Alternative (C3bBbP).<br>\n• Nomenclature: C2a is the larger catalytic fragment that stays bound.<br>\n• Alternative pathway: C3 tick-over is continuous; Properdin stabilizes while Factor H/I downregulate.<br>\n• Terminal pathway: C5b coordinates sequential non-covalent assembly of C6, C7, C8, and C9 into the MAC.<br>\n• Diagnostics: CH50 zero + AP50 zero with normal C3/C4 indicates a terminal MAC (C5–C9) defect.\n</div>\n<br>\n[[Return to Main Menu|Start-Complement]]"
+};
+
+function parseLinks(text) {
+  return text.replace(/\[\[([^|\]]+)\|([^\]]+)\]\]/g, (match, label, target) => {
+    let extraClass = '';
+    const cleanLabel = label.trim();
+    if (/^[A-D]\)/.test(cleanLabel) || cleanLabel.startsWith('← Try again') || /^Retrieval-Q\d+-(Correct|Wrong)/.test(target.trim())) {
+      extraClass = ' link-answer';
+    } else if (cleanLabel.startsWith('Continue') || cleanLabel.startsWith('Next') || cleanLabel.startsWith('Start Retrieval') || cleanLabel.startsWith('Finish') || cleanLabel.startsWith('Return') || cleanLabel.startsWith('Explore') || cleanLabel.startsWith('Review') || cleanLabel.includes('Main Menu') || cleanLabel.startsWith('← Return')) {
+      extraClass = ' link-continue';
+    }
+    return `<a class="link-internal${extraClass}" href="#" data-target="${target}">${cleanLabel}</a>`;
+  });
+}
+
+function renderPassage(passageKey) {
+  const container = document.getElementById('passage-container');
+  if (!container) return;
+  const rawContent = PASSAGES[passageKey];
+  if (!rawContent) {
+    container.innerHTML = `<div class="passage"><h2>Error</h2><p>Passage <code>${passageKey}</code> not found.</p><a class="link-internal link-continue" href="#" data-target="Start-Complement">Return to Main Menu</a></div>`;
+  } else {
+    container.innerHTML = `<div class="passage">${parseLinks(rawContent)}</div>`;
+  }
+  
+  const links = container.querySelectorAll('a[data-target], [data-target]');
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = link.getAttribute('data-target');
+      if (target) {
+        renderPassage(target);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+function initApp() {
+  const sidInput = document.getElementById('sid-input');
+  const sidBtn = document.getElementById('sid-btn');
+  const sidModal = document.getElementById('student-modal');
+  const sidErr = document.getElementById('sid-errtxt');
+
+  function startApp() {
+    const val = sidInput ? sidInput.value.trim() : '';
+    // Accepts any 4-10 character lab code or student ID
+    if (val.length >= 4) {
+      if (sidModal) sidModal.style.display = 'none';
+      renderPassage('Start-Complement');
+    } else {
+      if (sidInput) sidInput.classList.add('sid-error');
+      if (sidErr) sidErr.innerText = 'Please enter your code (at least 4 characters).';
+      setTimeout(() => {
+        if (sidInput) sidInput.classList.remove('sid-error');
+      }, 500);
+    }
+  }
+
+  if (sidBtn) {
+    sidBtn.onclick = startApp;
+  }
+  if (sidInput) {
+    sidInput.onkeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        startApp();
+      }
+    };
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
+</script>
+</body>
+</html>
