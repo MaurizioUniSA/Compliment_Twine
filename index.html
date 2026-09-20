@@ -402,6 +402,26 @@ a.link-internal.link-back + a.link-continue { margin-top: .6rem; }
   a.link-internal.link-back { background: transparent; border-color: #4a5590; color: #9aadff; }
   a.link-internal.link-back:hover { background: #1c1e38; }
 }
+
+/* Analytics status */
+#analytics-health { font-size: 0.82rem; line-height: 1.4; margin-top: 0.9rem; padding: 0.55rem 0.75rem; border-radius: 8px; text-align: left; min-height: 1.2em; }
+#analytics-health.ah-ok { background: #e8f9ef; color: #14472e; border: 1px solid #b7e6c9; }
+#analytics-health.ah-bad { background: #fdecea; color: #7a1c14; border: 1px solid #f3b6ae; }
+#analytics-health.ah-warn, #analytics-health.ah-checking { background: #f1f2f8; color: #454a6b; border: 1px solid #d5d8ea; }
+#analytics-health .ah-recheck { color: inherit; font-weight: 600; text-decoration: underline; cursor: pointer; }
+#analytics-badge { display: none; position: fixed; right: 0.9rem; bottom: 0.9rem; z-index: 1100; font-size: 0.72rem; padding: 0.25rem 0.7rem; border-radius: 99px; border: 1px solid transparent; pointer-events: none; opacity: 0.85; }
+#analytics-badge.ok { background: #e8f9ef; color: #14472e; border-color: #b7e6c9; }
+#analytics-badge.bad { background: #fdecea; color: #7a1c14; border-color: #f3b6ae; }
+#analytics-badge.pending { background: #f1f2f8; color: #454a6b; border-color: #d5d8ea; }
+#selftest-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(15,16,30,0.92); color: #e6e9ff; overflow: auto; padding: 1.5rem; font: 14px/1.5 ui-monospace, Consolas, monospace; white-space: pre-wrap; }
+@media (prefers-color-scheme: dark) {
+  #analytics-health.ah-ok { background: #0e2018; color: #6ee8a0; border-color: #1c5a3a; }
+  #analytics-health.ah-bad { background: #2a0f0c; color: #f3a79f; border-color: #6b2a22; }
+  #analytics-health.ah-warn, #analytics-health.ah-checking { background: #1a1b2e; color: #b8bde0; border-color: #2e3060; }
+  #analytics-badge.ok { background: #0e2018; color: #6ee8a0; border-color: #1c5a3a; }
+  #analytics-badge.bad { background: #2a0f0c; color: #f3a79f; border-color: #6b2a22; }
+  #analytics-badge.pending { background: #1a1b2e; color: #b8bde0; border-color: #2e3060; }
+}
 </style>
 </head>
 <body>
@@ -410,12 +430,14 @@ a.link-internal.link-back + a.link-continue { margin-top: .6rem; }
   <div class="modal-card">
     <h2>Complement System Activity</h2>
     <p>Enter your <strong>5-digit PC lab code</strong> to begin.<br>Your code is provided by your instructor.</p>
-    <input type="text" id="sid-input" maxlength="5" inputmode="numeric" placeholder="· · · · ·" autocomplete="off">
+    <input type="text" id="sid-input" maxlength="14" inputmode="text" placeholder="· · · · ·" autocomplete="off">
     <div id="sid-errtxt"></div>
     <button id="sid-btn" type="button">Begin Activity →</button>
+    <div id="analytics-health" class="ah-checking">Checking analytics connection…</div>
   </div>
 </div>
 
+<div id="analytics-badge"></div>
 <div id="story">
   <div id="passage-container"></div>
 </div>
@@ -714,9 +736,481 @@ function parseLinks(text) {
   });
 }
 
+// ===========================================================================
+// Analytics: batched, retried, queued locally, sent to a Google Apps Script web app
+// ===========================================================================
+const ANALYTICS_CONFIG = {
+  SCRIPT_URL: "PASTE_YOUR_APPS_SCRIPT_URL_HERE",   // the Web App /exec URL (see Code.gs)
+  APP_VERSION: "complement-analytics-v6",
+  HEARTBEAT_MS: 30000,          // running total of active time is logged this often
+  IDLE_LIMIT_S: 60,             // active-time counter pauses after this many seconds without interaction
+  FLUSH_DELAY_MS: 1500,         // events are batched for this long before sending
+  BATCH_SIZE: 50,
+  MAX_QUEUE: 2000,
+  RETRY_BACKOFF_MS: [1000, 3000],   // retries inside one flush (plus one initial try)
+  // Codes that are treated as test sessions (is_test = true). Instructor / test logins: "12345_EDUCATOR", "12345_TEST".
+  TEST_CODES: ["12345", "99999", "00000", "11111"],
+  // Optional: list every real allocated code, e.g. ["02210", "02211"]. Anything not in the list is flagged as a test session.
+  ALLOCATED_CODES: null,
+  DRY_RUN: false                // true = never send (used by the self-test)
+};
+
+const Analytics = (() => {
+  const C = ANALYTICS_CONFIG;
+  const QUEUE_KEY = "ct_analytics_queue_v1";
+  const PREV_SESSION_KEY = "ct_analytics_prev_session";
+
+  let session = null;               // { id, code, type, isTest, startedAt }
+  let seq = 0;
+  let queue = loadQueue();
+  let connected = null;             // null = unknown, true, false
+  let lastError = "";
+  let flushing = false;
+  let flushTimer = null;
+  let retryTimer = null;
+  let retryDelay = 15000;
+  let captured = null;              // self-test: array that receives every event instead of the queue
+
+  // active-time accounting
+  let activeS = 0;
+  let lastActivity = Date.now();
+  let lastHeartbeatActive = -1;
+  let pageKey = null, pageEnter = 0, pageActiveS = 0, viewNumber = 0;
+  let lastKey = null;
+  let lastUnloadFlush = 0;
+
+  // counters that feed the Sessions row
+  const cnt = {
+    pagesViewed: 0, unique: new Set(), pathways: new Set(),
+    questionsAnswered: 0, firstCorrect: 0, wrong: 0,
+    mcqAnswered: 0, mcqScore: 0, mcqCompleted: false, reachedSummary: false
+  };
+  const attempts = {};              // question passage key -> attempts so far
+
+  // ---------------- helpers ----------------
+  function nowIso() { return new Date().toISOString(); }
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function loadQueue() {
+    try { const q = JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); return Array.isArray(q) ? q : []; }
+    catch (e) { return []; }
+  }
+  function saveQueue() {
+    try {
+      if (queue.length > C.MAX_QUEUE) queue = queue.slice(queue.length - C.MAX_QUEUE);
+      localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+    } catch (e) { /* storage unavailable: keep the in-memory queue only */ }
+  }
+
+  function classifyCode(code) {
+    const c = String(code);
+    if (/_EDUCATOR$/i.test(c)) return { type: "instructor", isTest: true };
+    if (/_TEST$/i.test(c) || C.TEST_CODES.indexOf(c) !== -1) return { type: "test", isTest: true };
+    if (Array.isArray(C.ALLOCATED_CODES) && C.ALLOCATED_CODES.indexOf(c) === -1) return { type: "unlisted", isTest: true };
+    return { type: "student", isTest: false };
+  }
+
+  function pathwayOf(key) {
+    if (/^Retrieval-/.test(key)) return "retrieval";
+    const p = (typeof PASSAGES !== "undefined" && PASSAGES[key]) || "";
+    const m = p.match(/section-label ([a-z]+)/);
+    return m ? m[1] : "";
+  }
+
+  // ---- answer classification (the SAME passage content that is shown to the student decides correctness) ----
+  function isQuestionPassage(key) {
+    const p = (typeof PASSAGES !== "undefined" && PASSAGES[key]) || "";
+    return /\[\[[A-D]\) /.test(p);
+  }
+  function outcomeOfTarget(target) {
+    const p = (typeof PASSAGES !== "undefined" && PASSAGES[target]) || "";
+    if (p.indexOf("feedback-correct") !== -1) return true;
+    if (p.indexOf("feedback-incorrect") !== -1) return false;
+    return null;
+  }
+  function nameSaysCorrect(target) { return /(^|[-_])Correct([-_]|$)/.test(target); }
+  function questionText(key) {
+    const p = (typeof PASSAGES !== "undefined" && PASSAGES[key]) || "";
+    const m = p.match(/<p><em>([\s\S]*?)<\/em><\/p>/) || p.match(/<h2>([\s\S]*?)<\/h2>/);
+    return m ? m[1].replace(/<[^>]+>/g, "").trim().slice(0, 300) : key;
+  }
+
+  // ---------------- event creation ----------------
+  function emit(type, data) {
+    if (!session) return null;
+    const ev = Object.assign({
+      event_id: session.id + "-" + (++seq),
+      type: type,
+      ts: nowIso(),
+      session_id: session.id,
+      student_code: String(session.code),        // always text
+      session_type: session.type,
+      is_test: session.isTest
+    }, data || {});
+    if (captured) { captured.push(ev); return ev; }
+    queue.push(ev);
+    saveQueue();
+    updateBadge();
+    scheduleFlush(C.FLUSH_DELAY_MS);
+    return ev;
+  }
+
+  function sessionSnapshot(reason) {
+    return {
+      last_seen_at: nowIso(),
+      end_reason: reason,
+      active_seconds: activeS,
+      wall_seconds: Math.round((Date.now() - session.startedAt) / 1000),
+      passages_viewed: cnt.pagesViewed,
+      unique_passages: cnt.unique.size,
+      pathways_visited: Array.from(cnt.pathways).join(";"),
+      questions_answered: cnt.questionsAnswered,
+      first_attempt_correct: cnt.firstCorrect,
+      wrong_answers: cnt.wrong,
+      mcq_answered: cnt.mcqAnswered,
+      mcq_score: cnt.mcqScore,
+      mcq_completed: cnt.mcqCompleted,
+      reached_summary: cnt.reachedSummary,
+      last_passage: pageKey || ""
+    };
+  }
+  function emitSessionUpdate(reason) { if (session) emit("session_update", sessionSnapshot(reason)); }
+
+  // ---------------- page + time tracking ----------------
+  function emitPageSegment(reason) {
+    if (!session || !pageKey) return;
+    emit("time_on_page", {
+      passage: pageKey,
+      pathway: pathwayOf(pageKey),
+      active_seconds: pageActiveS,
+      wall_seconds: Math.round((Date.now() - pageEnter) / 1000),
+      segment_reason: reason
+    });
+    pageActiveS = 0;
+    pageEnter = Date.now();
+  }
+
+  function onRender(key, navType) {
+    if (!session) { lastKey = key; return; }
+    if (pageKey) emitPageSegment("navigate");
+    const prev = pageKey || "";
+    pageKey = key;
+    pageEnter = Date.now();
+    pageActiveS = 0;
+    viewNumber++;
+    cnt.pagesViewed++;
+    cnt.unique.add(key);
+    const pw = pathwayOf(key);
+    if (pw) cnt.pathways.add(pw);
+    emit("page_view", { passage: key, pathway: pw, prev_passage: prev, nav_type: navType || "link", view_number: viewNumber });
+    if (key === "Retrieval-Complete") { cnt.mcqCompleted = true; emitSessionUpdate("mcq_completed"); }
+    if (key === "Complement-Summary" || key === "Regulation_Summary") { cnt.reachedSummary = true; emitSessionUpdate("summary_reached"); }
+    lastKey = key;
+  }
+
+  // Called for every link click BEFORE navigation. `fromKey` is the passage the click happened on.
+  function onLinkClick(fromKey, target, label) {
+    if (!session) return null;
+    label = String(label || "").trim();
+    if (!isQuestionPassage(fromKey) || !/^[A-D]\) /.test(label)) return null;
+
+    const correct = outcomeOfTarget(target);            // same content that renders the green/red feedback box
+    const byName = nameSaysCorrect(target);             // independent second signal (passage naming convention)
+    const agree = (correct === byName);
+    const isMcq = /^Retrieval-Q\d+$/.test(fromKey);
+    const secondsOnQ = pageActiveS;
+    const optionPos = label.charAt(0);
+    const optionText = label.replace(/^[A-D]\) /, "");
+
+    if (isMcq) {
+      cnt.mcqAnswered++;
+      if (correct === true) cnt.mcqScore++;
+      return emit("mcq_result", {
+        q_number: parseInt(fromKey.replace("Retrieval-Q", ""), 10),
+        question_id: fromKey, question_text: questionText(fromKey),
+        option_position: optionPos, option_text: optionText,
+        destination_passage: target, correct: correct === true,
+        dest_name_says_correct: byName, signals_agree: agree,
+        score_so_far: cnt.mcqScore, seconds_on_question: secondsOnQ
+      });
+    }
+
+    attempts[fromKey] = (attempts[fromKey] || 0) + 1;
+    const attempt = attempts[fromKey];
+    const firstAttemptCorrect = (attempt === 1 && correct === true);
+    cnt.questionsAnswered++;
+    if (firstAttemptCorrect) cnt.firstCorrect++;
+    if (correct === false) cnt.wrong++;
+    return emit("answer", {
+      pathway: pathwayOf(fromKey),
+      question_id: fromKey, question_text: questionText(fromKey),
+      option_position: optionPos, option_text: optionText,
+      destination_passage: target, correct: correct === true,
+      dest_name_says_correct: byName, signals_agree: agree,
+      attempt_number: attempt, first_attempt_correct: firstAttemptCorrect,
+      seconds_on_question: secondsOnQ
+    });
+  }
+
+  // ---------------- session lifecycle ----------------
+  function startSession(code) {
+    const cls = classifyCode(code);
+    let prev = "";
+    try { prev = sessionStorage.getItem(PREV_SESSION_KEY) || ""; } catch (e) {}
+    session = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+      code: String(code), type: cls.type, isTest: cls.isTest, startedAt: Date.now()
+    };
+    try { sessionStorage.setItem(PREV_SESSION_KEY, session.id); } catch (e) {}
+    seq = 0; activeS = 0; lastActivity = Date.now(); lastHeartbeatActive = -1;
+    pageKey = null; viewNumber = 0;
+    Object.keys(attempts).forEach(k => delete attempts[k]);
+    cnt.pagesViewed = 0; cnt.unique.clear(); cnt.pathways.clear();
+    cnt.questionsAnswered = cnt.firstCorrect = cnt.wrong = cnt.mcqAnswered = cnt.mcqScore = 0;
+    cnt.mcqCompleted = cnt.reachedSummary = false;
+    emit("session_start", Object.assign({
+      started_at: nowIso(),
+      prev_session_id: prev,
+      app_version: C.APP_VERSION,
+      user_agent: navigator.userAgent,
+      screen: window.screen ? (window.screen.width + "x" + window.screen.height) : "",
+      timezone: (Intl && Intl.DateTimeFormat) ? Intl.DateTimeFormat().resolvedOptions().timeZone : ""
+    }, sessionSnapshot("started")));
+  }
+
+  function tick() {
+    if (!session) return;
+    const visible = document.visibilityState === "visible";
+    const idle = (Date.now() - lastActivity) / 1000;
+    if (visible && idle <= C.IDLE_LIMIT_S) { activeS++; pageActiveS++; }
+  }
+  function heartbeat() {
+    if (!session) return;
+    if (activeS !== lastHeartbeatActive) { lastHeartbeatActive = activeS; emitSessionUpdate("heartbeat"); }
+    if (queue.length) scheduleFlush(0);
+  }
+
+  // Tab hidden / closed / navigated away: write what we know, and try to deliver it even while the page is closing.
+  function onLeaving(reason) {
+    if (!session) return;
+    const t = Date.now();
+    if (t - lastUnloadFlush < 1500 && reason !== "hidden") return;   // pagehide + beforeunload fire together
+    lastUnloadFlush = t;
+    emitPageSegment(reason);
+    emitSessionUpdate(reason);
+    beaconFlush();
+  }
+
+  // ---------------- transport ----------------
+  function fetchWithTimeout(url, opts, ms) {
+    const ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+    const timer = setTimeout(() => { if (ctl) ctl.abort(); }, ms);
+    return fetch(url, Object.assign({}, opts, ctl ? { signal: ctl.signal } : {})).finally(() => clearTimeout(timer));
+  }
+  function configured() { return C.SCRIPT_URL && C.SCRIPT_URL.indexOf("PASTE_YOUR") === -1; }
+
+  function scheduleFlush(delay) {
+    if (C.DRY_RUN || captured) return;
+    clearTimeout(flushTimer);
+    flushTimer = setTimeout(flush, delay);
+  }
+
+  async function postJson(payload) {
+    const res = await fetchWithTimeout(C.SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },   // "simple" request: no CORS preflight (Apps Script cannot answer one)
+      body: JSON.stringify(payload)
+    }, 20000);
+    const text = await res.text();
+    let json;
+    try { json = JSON.parse(text); }
+    catch (e) { throw new Error("Endpoint did not return JSON (wrong URL, expired deployment, or a Google authorisation page)"); }
+    return json;
+  }
+
+  async function flush() {
+    if (C.DRY_RUN || captured) return;
+    if (flushing) return;
+    if (!queue.length) return;
+    if (!configured()) { setConnected(false, "SCRIPT_URL is not set"); return; }
+    flushing = true;
+    try {
+      while (queue.length) {
+        const batch = queue.slice(0, C.BATCH_SIZE);
+        let ok = false, lastErr = "";
+        for (let attempt = 0; attempt <= C.RETRY_BACKOFF_MS.length; attempt++) {
+          try {
+            const json = await postJson({ action: "log", events: batch, client: { user_agent: navigator.userAgent, app_version: C.APP_VERSION } });
+            if (json && json.ok) { ok = true; break; }
+            lastErr = (json && json.error) || "server refused the batch";
+          } catch (e) { lastErr = e && e.message ? e.message : String(e); }
+          if (attempt < C.RETRY_BACKOFF_MS.length) await sleep(C.RETRY_BACKOFF_MS[attempt] + Math.random() * 500);
+        }
+        if (!ok) {
+          setConnected(false, lastErr);
+          retryDelay = Math.min(retryDelay * 2, 120000);
+          clearTimeout(retryTimer);
+          retryTimer = setTimeout(flush, retryDelay);
+          return;                                    // events stay in the queue (and in localStorage)
+        }
+        const sent = new Set(batch.map(e => e.event_id));
+        queue = queue.filter(e => !sent.has(e.event_id));
+        saveQueue();
+        retryDelay = 15000;
+        setConnected(true, "");
+      }
+    } finally { flushing = false; updateBadge(); }
+  }
+
+  // Best-effort delivery while the page is closing. The queue is NOT cleared here: the server ignores duplicate event_ids,
+  // so anything the beacon missed is simply re-sent on the next successful flush.
+  function beaconFlush() {
+    if (C.DRY_RUN || captured || !configured() || !queue.length) return;
+    try {
+      const body = JSON.stringify({ action: "log", events: queue.slice(-200), client: { user_agent: navigator.userAgent, app_version: C.APP_VERSION } });
+      if (navigator.sendBeacon) navigator.sendBeacon(C.SCRIPT_URL, new Blob([body], { type: "text/plain;charset=UTF-8" }));
+    } catch (e) { /* the localStorage queue is the fallback */ }
+  }
+
+  // ---------------- health check + status display ----------------
+  async function healthCheck() {
+    setHealthText("checking", "Checking analytics connection…");
+    if (C.DRY_RUN) { setHealthText("warn", "Analytics: dry-run mode (nothing is sent)."); return false; }
+    if (!configured()) { setConnected(false, "SCRIPT_URL has not been set in the code"); return false; }
+    try {
+      const res = await fetchWithTimeout(C.SCRIPT_URL + (C.SCRIPT_URL.indexOf("?") === -1 ? "?" : "&") + "action=ping&client_ts=" + encodeURIComponent(nowIso()) + "&t=" + Date.now(), {}, 12000);
+      const text = await res.text();
+      let json;
+      try { json = JSON.parse(text); } catch (e) { throw new Error("Endpoint did not return JSON (wrong URL, expired deployment, or Google authorisation needed)"); }
+      if (!json.ok || !json.sheet_ok) throw new Error(json.error || "Endpoint reached but the Sheet could not be written");
+      setConnected(true, "", json.version);
+      if (queue.length) scheduleFlush(0);       // send anything saved from an earlier failure
+      return true;
+    } catch (e) {
+      setConnected(false, e && e.message ? e.message : String(e));
+      return false;
+    }
+  }
+
+  function setConnected(ok, err, version) {
+    connected = ok; lastError = err || "";
+    if (ok) setHealthText("ok", "Analytics connected ✓" + (version ? "  (" + version + ")" : "") + (queue.length ? "  · sending " + queue.length + " saved event(s)" : ""));
+    else setHealthText("bad", "Analytics NOT connected ✗ — " + (err || "unknown problem") + ". Answers are being kept on this computer and will be sent when the connection returns. Tell your instructor.");
+    updateBadge();
+  }
+  function setHealthText(state, text) {
+    const el = document.getElementById("analytics-health");
+    if (!el) return;
+    el.className = "ah-" + state;
+    el.textContent = text;
+    if (state === "bad" || state === "ok") {
+      const a = document.createElement("a");
+      a.href = "#"; a.textContent = "  Re-check"; a.className = "ah-recheck";
+      a.addEventListener("click", (e) => { e.preventDefault(); healthCheck(); });
+      el.appendChild(a);
+    }
+  }
+  function updateBadge() {
+    const el = document.getElementById("analytics-badge");
+    if (!el) return;
+    if (!session) { el.style.display = "none"; return; }
+    el.style.display = "block";
+    if (connected === false) { el.className = "bad"; el.textContent = "Analytics ✗ (" + queue.length + " saved)"; }
+    else if (connected === true && queue.length === 0) { el.className = "ok"; el.textContent = "Analytics ✓"; }
+    else { el.className = "pending"; el.textContent = "Analytics … (" + queue.length + ")"; }
+  }
+
+  // ---------------- wiring ----------------
+  function markActivity() { lastActivity = Date.now(); }
+  ["click", "keydown", "mousemove", "scroll", "wheel", "touchstart"].forEach(ev =>
+    window.addEventListener(ev, markActivity, { passive: true, capture: true }));
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") onLeaving("hidden");
+    else { lastActivity = Date.now(); pageEnter = Date.now(); if (queue.length) scheduleFlush(0); }
+  });
+  window.addEventListener("pagehide", () => onLeaving("unload"));
+  window.addEventListener("beforeunload", () => onLeaving("unload"));
+  window.addEventListener("online", () => { if (queue.length) scheduleFlush(0); healthCheck(); });
+  setInterval(tick, 1000);
+  setInterval(heartbeat, C.HEARTBEAT_MS);
+
+  return {
+    healthCheck, startSession, onRender, onLinkClick, flush,
+    isQuestionPassage, outcomeOfTarget, nameSaysCorrect,
+    isConnected: () => connected,
+    queueLength: () => queue.length,
+    // self-test hooks
+    _capture(arr) { captured = arr; },
+    _session: () => session,
+    _end() { session = null; captured = null; }
+  };
+})();
+
+// ---------------------------------------------------------------------------
+// Self-test: walks EVERY check-question and EVERY option through the real page (real link clicks) and confirms the
+// logged "correct" field matches what the student is shown. Nothing is sent. Open the page with ?selftest=1
+// ---------------------------------------------------------------------------
+function runAnalyticsSelfTest() {
+  const events = [];
+  const failures = [];
+  let questions = 0, options = 0, embedded = 0, mcq = 0;
+  Analytics._capture(events);
+  Analytics.startSession("00000_TEST");
+  const qKeys = Object.keys(PASSAGES).filter(k => Analytics.isQuestionPassage(k));
+  qKeys.forEach(q => {
+    const opts = [...PASSAGES[q].matchAll(/\[\[([A-D]\) [^\]|]*)\|([^\]]+)\]\]/g)].map(m => ({ label: m[1].trim(), target: m[2].trim() }));
+    const isMcq = /^Retrieval-Q\d+$/.test(q);
+    questions++; if (isMcq) mcq++; else embedded++;
+    let nCorrect = 0;
+    opts.forEach(o => {
+      renderPassage(q);
+      const before = events.length;
+      const link = [...document.querySelectorAll("#passage-container a[data-target]")].find(a => a.textContent.trim() === o.label);
+      if (!link) { failures.push(q + ": option link not found: " + o.label); return; }
+      link.click();
+      options++;
+      const ev = events.slice(before).find(e => e.type === "answer" || e.type === "mcq_result");
+      const shownCorrect = !!document.querySelector("#passage-container .feedback-correct");
+      const shownWrong = !!document.querySelector("#passage-container .feedback-incorrect");
+      if (!ev) { failures.push(q + " / " + o.label + ": no answer event logged"); return; }
+      if (shownCorrect === shownWrong) failures.push(q + " / " + o.label + ": destination page is neither clearly correct nor incorrect");
+      if (ev.correct !== shownCorrect) failures.push(q + " / " + o.label + ": logged correct=" + ev.correct + " but page shows " + (shownCorrect ? "CORRECT" : "INCORRECT"));
+      if (ev.signals_agree !== true) failures.push(q + " / " + o.label + ": passage NAME (" + ev.destination_passage + ") disagrees with the logged correct flag");
+      if (ev.destination_passage !== o.target) failures.push(q + " / " + o.label + ": destination logged as " + ev.destination_passage + ", expected " + o.target);
+      if (ev.question_id !== q) failures.push(q + " / " + o.label + ": question_id logged as " + ev.question_id);
+      if (isMcq && ev.type !== "mcq_result") failures.push(q + ": MCQ answer not logged as mcq_result");
+      if (!isMcq && ev.type !== "answer") failures.push(q + ": embedded answer not logged as answer");
+      if (shownCorrect) nCorrect++;
+    });
+    if (nCorrect !== 1) failures.push(q + ": has " + nCorrect + " correct options (expected exactly 1)");
+  });
+  // code-handling checks
+  const codeChecks = [["02210", "student", false], ["12345", "test", true], ["22176_EDUCATOR", "instructor", true], ["99999", "test", true]];
+  codeChecks.forEach(([code, type, isTest]) => {
+    const evs = []; Analytics._capture(evs); Analytics.startSession(code);
+    const s = evs.find(e => e.type === "session_start");
+    if (!s || s.student_code !== code || typeof s.student_code !== "string") failures.push("code " + code + " not preserved as text (got " + (s && s.student_code) + ")");
+    if (!s || s.session_type !== type || s.is_test !== isTest) failures.push("code " + code + " classified as " + (s && s.session_type) + "/" + (s && s.is_test) + ", expected " + type + "/" + isTest);
+  });
+  Analytics._end();
+  const result = { questions, embedded, mcq, options, failures, passed: failures.length === 0 };
+  window.__selfTestResult = result;
+  const panel = document.createElement("div");
+  panel.id = "selftest-panel";
+  panel.textContent = (result.passed ? "SELF-TEST PASSED ✓" : "SELF-TEST FAILED ✗") +
+    "\n\nQuestions checked: " + questions + " (" + embedded + " embedded + " + mcq + " MCQ)\nOptions clicked: " + options +
+    "\nFailures: " + failures.length + (failures.length ? "\n\n" + failures.join("\n") : "") +
+    "\n\n(Nothing was sent to the server. Reload without ?selftest=1 to use the activity.)";
+  document.body.appendChild(panel);
+  console.log("Analytics self-test", result);
+  return result;
+}
+
 // Navigation history, used by the Back button
 let passageHistory = [];
 let currentPassageKey = null;
+let nextNavType = "link";        // reported to analytics: start | link | back
 
 function navigateTo(target) {
   if (target === 'Start-Complement') {
@@ -726,6 +1220,7 @@ function navigateTo(target) {
   } else if (currentPassageKey && currentPassageKey !== target) {
     passageHistory.push(currentPassageKey);
   }
+  nextNavType = "link";
   renderPassage(target);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -733,6 +1228,7 @@ function navigateTo(target) {
 function goBack() {
   const previous = passageHistory.pop();
   if (previous) {
+    nextNavType = "back";
     renderPassage(previous);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -750,6 +1246,8 @@ function renderPassage(passageKey) {
   }
   
   currentPassageKey = passageKey;
+  Analytics.onRender(passageKey, nextNavType);
+  nextNavType = "link";
 
   // Back button (above the "Return to Main Menu" link), shown when there is a previous page, except on wrong-answer pages
   const passageEl = container.querySelector('.passage');
@@ -771,6 +1269,7 @@ function renderPassage(passageKey) {
       e.preventDefault();
       const target = link.getAttribute('data-target');
       if (target) {
+        Analytics.onLinkClick(currentPassageKey, target, link.textContent);   // logged before navigating, from the same target that is about to be shown
         navigateTo(target);
       }
     });
@@ -784,10 +1283,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidErr = document.getElementById('sid-errtxt');
 
   function startApp() {
-    const val = sidInput ? sidInput.value.trim() : '';
-    if (/^\d{5}$/.test(val)) {
+    let val = sidInput ? String(sidInput.value).trim() : '';          // always a string: leading zeros (e.g. 02210) must survive
+    val = val.replace(/_(educator|test)$/i, m => m.toUpperCase());
+    if (/^\d{5}(_(EDUCATOR|TEST))?$/.test(val)) {
       if (sidModal) sidModal.style.display = 'none';
       passageHistory = [];
+      Analytics.startSession(val);
+      nextNavType = 'start';
       renderPassage('Start-Complement');
     } else {
       if (sidInput) sidInput.classList.add('sid-error');
@@ -797,6 +1299,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 500);
     }
   }
+
+  if (/[?&]selftest=1/.test(location.search)) {          // instructor self-test: no gate, nothing is sent
+    if (sidModal) sidModal.style.display = 'none';
+    runAnalyticsSelfTest();
+    return;
+  }
+  Analytics.healthCheck();                                 // shown on this screen: instructor confirms before every session
 
   if (sidBtn) sidBtn.onclick = startApp;
   if (sidInput) {
