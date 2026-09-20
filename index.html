@@ -403,7 +403,9 @@ a.link-internal.link-back + a.link-continue { margin-top: .6rem; }
   a.link-internal.link-back:hover { background: #1c1e38; }
 }
 
-/* Analytics status */
+/* Analytics status: hidden from students. Shown to instructors with ?check=1, or automatically for test / instructor codes. */
+body:not(.show-analytics) #analytics-health,
+body:not(.show-analytics) #analytics-badge { display: none !important; }
 #analytics-health { font-size: 0.82rem; line-height: 1.4; margin-top: 0.9rem; padding: 0.55rem 0.75rem; border-radius: 8px; text-align: left; min-height: 1.2em; }
 #analytics-health.ah-ok { background: #e8f9ef; color: #14472e; border: 1px solid #b7e6c9; }
 #analytics-health.ah-bad { background: #fdecea; color: #7a1c14; border: 1px solid #f3b6ae; }
@@ -1289,6 +1291,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (sidModal) sidModal.style.display = 'none';
       passageHistory = [];
       Analytics.startSession(val);
+      const sess = Analytics._session();
+      if (sess && sess.type !== 'student') document.body.classList.add('show-analytics');   // test / instructor sessions see the status pill
       nextNavType = 'start';
       renderPassage('Start-Complement');
     } else {
@@ -1305,7 +1309,8 @@ document.addEventListener('DOMContentLoaded', () => {
     runAnalyticsSelfTest();
     return;
   }
-  Analytics.healthCheck();                                 // shown on this screen: instructor confirms before every session
+  if (/[?&]check=1/.test(location.search)) document.body.classList.add('show-analytics');   // instructor view: open the page with ?check=1
+  Analytics.healthCheck();                                 // always runs (and logs a Health row); only displayed when show-analytics is set
 
   if (sidBtn) sidBtn.onclick = startApp;
   if (sidInput) {

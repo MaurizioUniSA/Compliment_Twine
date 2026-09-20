@@ -44,14 +44,15 @@ new URL and the old one keeps serving old code. Using a new deployment was a lik
 
 ## 3. Instructor checks before every session day
 
-1. Open the activity. The code screen must say **"Analytics connected ✓"** (green). Red means not connected, with the
+1. Open the activity **with `?check=1` on the end of the address** (for example `https://your-site/?check=1`). The status is hidden from
+   students, and `?check=1` reveals it. The code screen must say **"Analytics connected ✓"** (green). Red means not connected, with the
    reason (URL not set, expired deployment, authorisation page, quota). Fix before students start.
 2. Optional: open `<SCRIPT_URL>?action=ping` in a browser tab. You should see `{"ok":true,"sheet_ok":true,...}` and a new row in **Health**.
 3. Open the activity with `?selftest=1` on the end of the address. It clicks every option of every one of the 28
    check-questions, confirms the logged `correct` matches what the page shows, and must say **SELF-TEST PASSED ✓**
    (28 questions, 96 options, 0 failures). Nothing is sent to the Sheet.
 
-While a session runs, a small pill bottom-right shows **Analytics ✓** or **Analytics ✗ (n saved)**. If a send fails the
+The small status pill (bottom-right, **Analytics ✓** or **Analytics ✗ (n saved)**) is also hidden from students. It appears for test and instructor codes (`12345`, `#####_TEST`, `#####_EDUCATOR`) and whenever `?check=1` is used. If a send fails the
 client retries with back-off, then keeps the events in the browser (localStorage) and sends them when the connection returns.
 
 ## 4. Test protocol before the real deployment
